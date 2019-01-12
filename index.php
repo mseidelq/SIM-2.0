@@ -6,6 +6,7 @@
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <link rel="stylesheet" href="css/login.css">
+
     <title>SIM - Sistema de venta en Moteles</title>
   </head>
   <body id="LoginForm">
@@ -18,7 +19,7 @@
          <h2>Acceso al Sistema</h2>
          <p>Por favor ingrese usuario y contraseña</p>
        </div>
-        <form id="Login">
+
           <div class="form-group">
             <input type="text" class="form-control" id="input_usuario" placeholder="Usuario">
           </div>
@@ -31,10 +32,10 @@
           </div>
           <button class="btn btn-primary" id="ingresar">Ingresar</button>
 
-        </form>
+      
         </div>
     </div></div></div>
 
-
+    <script src="pages/jquery/login.js"></script>
     </body>
 </html>
