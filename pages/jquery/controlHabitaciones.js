@@ -1,0 +1,3 @@
+function mostrarNombres(){
+  alert(nombres);
+}

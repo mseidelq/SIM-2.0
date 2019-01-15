@@ -1,3 +1,15 @@
+<?php
+error_reporting(E_ERROR | E_WARNING | E_PARSE);
+session_start();
+if(isset($_SESSION['cedula'])){
+		$sesion = $_SESSION;
+		echo $sesion['nombres'];
+}
+else {
+	header('Location: ../index.php');
+}
+?>
+
 <!doctype html>
 <html>
 <head>
@@ -24,16 +36,7 @@
 
 <body style="padding-top: 60px">
 <?php
-error_reporting(E_ERROR | E_WARNING | E_PARSE);
-session_start();
-if(isset($_SESSION['cedula'])){
-		$sesion = $_SESSION;
-		echo $sesion['nombres'];
-		include("menu.php");
-}
-else {
-	header('Location: ../index.php');
-}
+include("menu.php");
 
 //include("phpFunciones/funciones.php");
 	  //include("modales/modales.php");
@@ -131,6 +134,16 @@ else {
 <script src="../js/bootstrap-3.3.7.js"></script>
 
 
+
+<script type="text/javascript">
+var nombres;
+$(document).ready(function () {
+  nombres = "<?php echo $sesion['nombres']; ?>"
+	mostrarNombres();
+
+});
+
+</script>
 <script src="jquery/controlHabitaciones.js"></script>
 
 </body>
