@@ -1,4 +1,6 @@
 <?php
+error_reporting(E_ERROR | E_WARNING | E_PARSE);
+session_start();
 $servername = "localhost";
 $username = "usuariosim";
 $password = "";
@@ -24,8 +26,22 @@ $dbname = "sim";
 		  while($row = mysqli_fetch_assoc($resultado))
 			   $datos = $row;
 
-      if(!$datos)
-        $datos = "Error: El usuario no existe o la contrasena esta errada";
+      if(!$datos){
+        $datos = "El usuario no existe o la contrasena esta errada";
+			}
+			else{
+				if($datos["estado"]!="ACTIVO"){
+					$datos = "El usuario se encuentra en estado: ".$datos["estado"];
+				}
+				else{
+					$_SESSION['cedula'] = $datos['cedula'];				$_SESSION['nombres'] = $datos['nombres'];				$_SESSION['apellidos'] = $datos['apellidos'];
+					$_SESSION['telefono'] = $datos['telefono'];		$_SESSION['usuario_id'] = $datos['usuario_id'];	$_SESSION['usuario'] = $datos['usuario'];
+					$_SESSION['email'] = $datos['email'];					$_SESSION['usuario_contra'] = $datos['usuario_contra'];
+					$_SESSION['direccion'] = $datos['direccion'];		$_SESSION['foto'] = $datos['foto'];	$_SESSION['estado'] = $datos['estado'];
+
+					//header("Location: principal.php");
+				}
+			}
       echo json_encode($datos);
     }
     else{

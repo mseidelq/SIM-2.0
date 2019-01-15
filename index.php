@@ -30,9 +30,12 @@
           <div class="forgot">
             <a href="reset.html">Olvidó contraseña</a>
           </div>
+          <div class="alert alert-danger" id="login_error">
+            <strong>Error: </strong> El nombre de usuario o contraseña no son correctos.
+          </div>
           <button class="btn btn-primary" id="ingresar">Ingresar</button>
 
-      
+
         </div>
     </div></div></div>
 

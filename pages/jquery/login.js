@@ -1,6 +1,7 @@
 $(document).ready(function(){
 
   var datos_usuario;
+  $("#login_error").hide();
 
   $("#ingresar").on("click",function () {
     var usr = $("#input_usuario").val();
@@ -17,8 +18,18 @@ $(document).ready(function(){
 
   	  async:false
   	});
-    if(datos_usuario.usuario) alert(datos_usuario.usuario);
-    else alert(datos_usuario);
+    if(datos_usuario.usuario){
+      window.open('pages/principal.php','TITULO','width =max,height=max');
+    }
+    else{
+      $("#login_error").html("<strong>Error: </strong>"+datos_usuario);
+      $("#login_error").show();
+    }
   });
-  
+
+  // OCULTA EL ERROR CUANDO SE FOCALIZA EL CAMPO PARA USUARIO O CONTRASEÑA
+  $("#input_contrasena, #input_usuario").on("focus",function () {
+    $("#login_error").hide();
+  });
+
 });

@@ -23,9 +23,21 @@
 </head>
 
 <body style="padding-top: 60px">
-<?php include("menu.php") ?>
-<?php include("phpFunciones/funciones.php");
-	  include("modales/modales.php");
+<?php
+error_reporting(E_ERROR | E_WARNING | E_PARSE);
+session_start();
+if(isset($_SESSION['cedula'])){
+		$sesion = $_SESSION;
+		echo $sesion['nombres'];
+		include("menu.php");
+}
+else {
+	header('Location: ../index.php');
+}
+
+//include("phpFunciones/funciones.php");
+	  //include("modales/modales.php");
+
 ?>
 
 <div class="container" id="principal">
