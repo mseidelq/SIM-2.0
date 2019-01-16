@@ -136,10 +136,10 @@ include("menu.php");
 
 
 <script type="text/javascript">
-var nombres;
+var usuario_jquery;
 $(document).ready(function () {
-  nombres = "<?php echo $sesion['nombres']; ?>"
-	mostrarNombres();
+	// TRAE TODOS LOS DATOS DEL USUARIO Y LOS PONE EN LA VARIABLE usuario_jquery
+  usuario_jquery = <?php echo json_encode($sesion); ?>;
 
 });
 
