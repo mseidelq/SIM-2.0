@@ -37,6 +37,7 @@ else {
 <body style="padding-top: 60px">
 <?php
 include("menu.php");
+include("modales/modales.php");
 
 //include("phpFunciones/funciones.php");
 	  //include("modales/modales.php");
@@ -66,7 +67,6 @@ include("menu.php");
 
 
 				<!-- PANEL PARA PRECIOS DE LA LISTA -->
-
 				<div class="col-lg-12 col-md-6">
 					<div class="panel panel-info">
 					  <div class="panel-heading">OCUPACION HABITACIONES</div>
@@ -134,17 +134,17 @@ include("menu.php");
 <script src="../js/bootstrap-3.3.7.js"></script>
 
 
-
+<script src="jquery/controlHabitaciones.js"></script>
 <script type="text/javascript">
-var usuario_jquery;
-$(document).ready(function () {
 	// TRAE TODOS LOS DATOS DEL USUARIO Y LOS PONE EN LA VARIABLE usuario_jquery
-  usuario_jquery = <?php echo json_encode($sesion); ?>;
+	var usuario_jquery = <?php echo json_encode($sesion); ?>;
+	var turno_usuario = verficiar_Turnos();
 
-});
 
 </script>
-<script src="jquery/controlHabitaciones.js"></script>
+
+
+
 
 </body>
 </html>
