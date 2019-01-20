@@ -22,7 +22,7 @@ if(isset($_GET["turnos"])){
   if($resultado)
   {
     while($row = mysqli_fetch_assoc($resultado))
-       $datos = $row;
+       $datos [] = $row;
 
     if(!$datos){
       $datos = "NO";

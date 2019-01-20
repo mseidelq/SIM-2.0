@@ -138,7 +138,7 @@ include("modales/modales.php");
 <script type="text/javascript">
 	// TRAE TODOS LOS DATOS DEL USUARIO Y LOS PONE EN LA VARIABLE usuario_jquery
 	var usuario_jquery = <?php echo json_encode($sesion); ?>;
-	var turno_usuario = verficiar_Turnos();
+	var turno_usuario =  verficiar_Turnos();
 
 
 </script>
