@@ -7,9 +7,9 @@ $password = "";
 $dbname = "sim";
 
 	// FUNCION PARA BUSCAR EL USUARIO Y TRAER LA INFORMACION
-	if(isset($_GET["usr"])){
-    $usr = $_GET["usr"];
-    $con = $_GET['contrasena'];
+	if(isset($_POST["usr"])){
+    $usr = $_POST["usr"];
+    $con = $_POST['contrasena'];
     // CONEXION Y COMANDO
     $conexion = mysqli_connect($servername,$username,$password, $dbname);
     $comando = "CALL p_s_consultar_usuarios('$usr','$con')";
@@ -38,6 +38,7 @@ $dbname = "sim";
 					$_SESSION['telefono'] = $datos['telefono'];		$_SESSION['usuario_id'] = $datos['usuario_id'];	$_SESSION['usuario'] = $datos['usuario'];
 					$_SESSION['email'] = $datos['email'];					$_SESSION['usuario_contra'] = $datos['usuario_contra'];
 					$_SESSION['direccion'] = $datos['direccion'];		$_SESSION['foto'] = $datos['foto'];	$_SESSION['estado'] = $datos['estado'];
+					$_SESSION['turno_activo'] = 0; $_SESSION['fecha_hora_inicio']=0;
 
 					//header("Location: principal.php");
 				}

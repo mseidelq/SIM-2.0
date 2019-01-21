@@ -3,7 +3,7 @@ error_reporting(E_ERROR | E_WARNING | E_PARSE);
 session_start();
 if(isset($_SESSION['cedula'])){
 		$sesion = $_SESSION;
-		echo $sesion['nombres'];
+		//echo $sesion['nombres'];
 }
 else {
 	header('Location: ../index.php');
@@ -66,7 +66,7 @@ include("modales/modales.php");
        		<div class="row">
 
 
-				<!-- PANEL PARA PRECIOS DE LA LISTA -->
+				AQUI PONER LA INFORMACION DEL TURNO DE CAJA INICIADO
 				<div class="col-lg-12 col-md-6">
 					<div class="panel panel-info">
 					  <div class="panel-heading">OCUPACION HABITACIONES</div>

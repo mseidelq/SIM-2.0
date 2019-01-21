@@ -8,7 +8,7 @@ $(document).ready(function(){
       var con = $("#input_contrasena").val();
 
       $.ajax({
-    	  type: 'GET',
+    	  type: 'POST',
     	  url: "pages/sql/login.php",
     	  data: {'usr':usr, 'contrasena':con},
     	  success: function(data){

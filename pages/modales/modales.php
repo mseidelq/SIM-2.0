@@ -1,6 +1,6 @@
 	<!-- MODAL INICAR TURNO-->
 
-	<div class="modal fade fixed-top" id="modalIniciarTurno" role="dialog">
+	<div class="modal fade fixed-top" id="modal_IniciarTurno" role="dialog">
 		<div class="modal-dialog">
 
 	  <!-- Modal content-->
@@ -11,7 +11,7 @@
 				</div>
 				<div class="modal-body">
 					<div class="container-fluid">
-						<div class="row">
+						<div class="row"  id="div_TurnoIniciado" hidden>
 
 							<div class="panel panel-info">
 								  <div class="panel-heading">TURNOS INICIADOS</div>
@@ -20,11 +20,11 @@
 									<div class="col-lg-12">
 										<div class="table-responsive">
 
-											<table id="tablaTurnosAbiertos" class="table-hover display table" style="width:100%" border>
+											<table id="tabla_TurnosAbiertos" class="table-hover display table" style="width:100%" border>
 												<thead class="bg-primary">
 												<tr>
-													<th >Fecha</th>
-													<th >Hora</th>
+													<th >Fecha Inicio</th>
+													<th >Hora Inicio</th>
 													<th >Accion</th>
 												</tr>
 												</thead>
@@ -48,7 +48,7 @@
 						</div>
 
 						<!-- INICIAR TURNO -->
-						<div class="row">
+						<div class="row"  id="div_IniciarTurno" hidden>
 
 							<div class="panel panel-info">
 								  <div class="panel-heading">INICIAR TURNO</div>
