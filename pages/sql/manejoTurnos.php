@@ -30,7 +30,7 @@ if(isset($_POST["iniciar_turno"])){
       }
       else{
         $_SESSION['turno_activo'] = $datos['turno_id'];
-        $_SESSION['fecha_hora_inicio'] = $datos['fecha_hora_inicio'];
+        $_SESSION['fecha_hora_inicio'] = $datos['fecha_inicio'];
       }
       echo json_encode($datos);
     }
@@ -63,6 +63,10 @@ if(isset($_POST["turnos"])){
 
       if(!$datos){
         $datos = "NO";
+      }
+      else{
+        $_SESSION['turno_activo'] = $datos['turno_id'];
+        $_SESSION['fecha_hora_inicio'] = $datos['fecha_inicio'];
       }
       echo json_encode($datos);
     }
