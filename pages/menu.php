@@ -71,7 +71,7 @@
 	            <li><a href="#"><i class="fa fa-user fa-fw"></i> Perfil del usuario</a></li>
 				<li><a href="#"><i class="fa fa-gear fa-fw"></i> Configuracion</a></li>
 				<li class="divider"></li>
-				<li><a href="../login.html"><i class="fa fa-sign-out fa-fw"></i> Cerrar Sesion</a>
+				<li id="opc_CerrarSesion"><a href="../index.php"><i class="fa fa-sign-out fa-fw"></i> Cerrar Sesion</a>
 				</li>
               </ul>
             </li>

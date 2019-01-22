@@ -31,7 +31,6 @@ else {
 <link rel="stylesheet" href="../css/font-awesome-4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
-
 </head>
 
 <body style="padding-top: 60px">
@@ -132,9 +131,10 @@ include("modales/modales.php");
 
 
 <script src="../js/bootstrap-3.3.7.js"></script>
-
+<script src="jquery/login.js"></script>
 
 <script src="jquery/controlHabitaciones.js"></script>
+
 <script type="text/javascript">
 	// TRAE TODOS LOS DATOS DEL USUARIO Y LOS PONE EN LA VARIABLE usuario_jquery
 	var usuario_jquery = <?php echo json_encode($sesion); ?>;

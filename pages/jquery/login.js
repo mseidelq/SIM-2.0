@@ -30,4 +30,19 @@ $(document).ready(function(){
   $("#input_contrasena, #input_usuario").on("focus",function () {
     $("#login_error").hide();
   });
+
+  // CERRAR Sesion
+  $("#opc_CerrarSesion").click(function(){
+    
+    $.ajax({
+      type: 'POST',
+      url: "sql/login.php",
+      data: {'cerrar_sesion':'cerrar'},
+      success: function(data){
+          alert("La sesion ha sido terminada por el usuario");
+      },
+      async:false
+    });
+
+  });
 });
