@@ -3,46 +3,48 @@ $(document).ready(function(){
   var datos_usuario;
   $("#login_error").hide();
 
-  $("#ingresar").on("click",function () {
-      var usr = $("#input_usuario").val();
-      var con = $("#input_contrasena").val();
+});
 
-      $.ajax({
-    	  type: 'POST',
-    	  url: "pages/sql/login.php",
-    	  data: {'usr':usr, 'contrasena':con},
-    	  success: function(data){
-    				datos_usuario = JSON.parse(data);
-    		},
+$("#ingresar").on("click",function () {
+    var usr = $("#input_usuario").val();
+    var con = $("#input_contrasena").val();
 
-    	  async:false
-    	});
-      if(datos_usuario.usuario){
-        window.open('pages/principal.php','TITULO','width =max,height=max');
-      }
-      else{
-        $("#login_error").html("<strong>Error: </strong>"+datos_usuario);
-        $("#login_error").show();
-      }
-  });
-
-  // OCULTA EL ERROR CUANDO SE FOCALIZA EL CAMPO PARA USUARIO O CONTRASEÑA
-  $("#input_contrasena, #input_usuario").on("focus",function () {
-    $("#login_error").hide();
-  });
-
-  // CERRAR Sesion
-  $("#opc_CerrarSesion").click(function(){
-    
     $.ajax({
       type: 'POST',
-      url: "sql/login.php",
-      data: {'cerrar_sesion':'cerrar'},
+      url: "pages/sql/login.php",
+      data: {'usr':usr, 'contrasena':con},
       success: function(data){
-          alert("La sesion ha sido terminada por el usuario");
+          datos_usuario = JSON.parse(data);
+          //alert(data);
       },
+
       async:false
     });
+    if(datos_usuario.usuario){
+      window.open('pages/principal.php','TITULO','width =max,height=max');
+    }
+    else{
+      $("#login_error").html("<strong>Error: </strong>"+datos_usuario);
+      $("#login_error").show();
+    }
+});
 
+// OCULTA EL ERROR CUANDO SE FOCALIZA EL CAMPO PARA USUARIO O CONTRASEÑA
+$("#input_contrasena, #input_usuario").on("focus",function () {
+  $("#login_error").hide();
+});
+
+// CERRAR Sesion
+$("#opc_CerrarSesion").click(function(){
+
+  $.ajax({
+    type: 'POST',
+    url: "sql/login.php",
+    data: {'cerrar_sesion':'cerrar'},
+    success: function(data){
+        alert(data);
+    },
+    async:false
   });
+
 });

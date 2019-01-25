@@ -3,7 +3,7 @@ error_reporting(E_ERROR | E_WARNING | E_PARSE);
 session_start();
 if(isset($_SESSION['cedula'])){
 		$sesion = $_SESSION;
-		//echo $sesion['nombres'];
+		echo $sesion['nombres']." - ".$_SESSION['usuario_id'];
 }
 else {
 	header('Location: ../index.php');
