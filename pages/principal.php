@@ -130,7 +130,7 @@ include("modales/modales.php");
 <script src="../js/bootstrap-3.3.7.js"></script>
 <script src="jquery/login.js"></script>
 
-<script src="jquery/manejoTurnos.js"></script>
+<script src="jquery/manejo_turnos.js"></script>
 
 <script type="text/javascript">
 	// TRAE TODOS LOS DATOS DEL USUARIO Y LOS PONE EN LA VARIABLE usuario_jquery

@@ -35,10 +35,10 @@ function iniciar_turno() {
 	var resultado;
 	$.ajax({
 	  type: 'POST',
-	  url: "sql/manejoTurnos.php",
+	  url: "sql/manejo_turnos.php",
 	  data: {'iniciar_turno':'iniciar'},
 	  success: function(data){
-				
+
 				resultado = JSON.parse(data);
 		},
 	  async:false
@@ -50,7 +50,7 @@ function verficiar_Turnos(){
   var turno;
   $.ajax({
 	  type: 'POST',
-	  url: "sql/manejoTurnos.php",
+	  url: "sql/manejo_turnos.php",
 	  data: {'turnos':'consultar'},
 	  success: function(data){
 				turno = JSON.parse(data);
