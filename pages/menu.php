@@ -66,7 +66,7 @@
 
 	      <ul class="nav navbar-nav navbar-right">
 	        <li><a href="#">Cerrar cesion</a></li>
-	        <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user fa-fw"></i><?php echo $sesion['nombres'] ?><span class="caret"></span></a>
+	        <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user fa-fw"></i><?php echo $sesion['nombres']." ".$sesion['apellidos'] ?><span class="caret"></span></a>
 	          <ul class="dropdown-menu">
 	            <li><a href="#"><i class="fa fa-user fa-fw"></i> Perfil del usuario</a></li>
 				<li><a href="#"><i class="fa fa-gear fa-fw"></i> Configuracion</a></li>

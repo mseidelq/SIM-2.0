@@ -22,8 +22,9 @@ $("#modal_IniciarTurno").on("show.bs.modal", function () {
 
 $("#btn_IniciarTurno").click(function() {
 	var resultado = iniciar_turno();
+
 	if(resultado.turno_id){
-		alert("Turno iniciado exitosamente el turno el dia: "+resultado.fecha_hora_inicio.substr(0,10)+ "	a la hora: "+resultado.fecha_hora_inicio.substr(11,12));
+		alert("Turno iniciado exitosamente el turno el dia: "+resultado.fecha_inicio.substr(0,10)+ "	a la hora: "+resultado.fecha_inicio.substr(11,12));
 
 		$("#modal_IniciarTurno .close").click();
 	}
@@ -37,6 +38,7 @@ function iniciar_turno() {
 	  url: "sql/manejoTurnos.php",
 	  data: {'iniciar_turno':'iniciar'},
 	  success: function(data){
+				
 				resultado = JSON.parse(data);
 		},
 	  async:false

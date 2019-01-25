@@ -3,7 +3,6 @@ error_reporting(E_ERROR | E_WARNING | E_PARSE);
 session_start();
 if(isset($_SESSION['cedula'])){
 		$sesion = $_SESSION;
-		echo $sesion['nombres']." - ".$_SESSION['usuario_id'];
 }
 else {
 	header('Location: ../index.php');
@@ -64,8 +63,6 @@ include("modales/modales.php");
       		<input type="text" id="codigobarras" hidden="true">
        		<div class="row">
 
-
-				AQUI PONER LA INFORMACION DEL TURNO DE CAJA INICIADO
 				<div class="col-lg-12 col-md-6">
 					<div class="panel panel-info">
 					  <div class="panel-heading">OCUPACION HABITACIONES</div>
@@ -133,7 +130,7 @@ include("modales/modales.php");
 <script src="../js/bootstrap-3.3.7.js"></script>
 <script src="jquery/login.js"></script>
 
-<script src="jquery/controlHabitaciones.js"></script>
+<script src="jquery/manejoTurnos.js"></script>
 
 <script type="text/javascript">
 	// TRAE TODOS LOS DATOS DEL USUARIO Y LOS PONE EN LA VARIABLE usuario_jquery
