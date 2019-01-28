@@ -2,7 +2,6 @@ $(document).ready(function () {
 
 	$("#modal_IniciarTurno").modal();
 
-
 });
 
 $("#modal_IniciarTurno").on("show.bs.modal", function () {
@@ -12,7 +11,7 @@ $("#modal_IniciarTurno").on("show.bs.modal", function () {
 			$("#div_TurnoIniciado").show();
 			$("#tabla_TurnosAbiertos").append("<td align='center'>"+turno_usuario[0].fecha_inicio.substr(0,10)+"</td>");
 			$("#tabla_TurnosAbiertos").append("<td align='center'>"+turno_usuario[0].fecha_inicio.substr(11,12)+"</td>");
-			$("#tabla_TurnosAbiertos").append("<td align='center'><button  data-dismiss='modal' type='button' class='btn btn-success btnHabitacion'>Continuar</button></td>");
+			$("#tabla_TurnosAbiertos").append("<td align='center'><button  data-dismiss='modal' type='button' class='btn btn-success'>Continuar</button></td>");
 			// CREAR EN $_SESSION EL TURNO Y LA FECHA
 	}
 	else {

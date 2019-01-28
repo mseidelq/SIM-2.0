@@ -72,7 +72,7 @@ include("modales/modales.php");
 
 							<div class="table-responsive">
 
-								<table id="tablaControlHabitaciones" class="table-hover display table" style="width:100%" border>
+								<table id="tabla_control_habitaciones" class="table-hover display table" style="width:100%" border>
 									<thead class="bg-primary">
 									<tr>
 										<th >Hab</th>
@@ -131,11 +131,15 @@ include("modales/modales.php");
 <script src="jquery/login.js"></script>
 
 <script src="jquery/manejo_turnos.js"></script>
+<script src="jquery/control_habitaciones.js"></script>
 
 <script type="text/javascript">
 	// TRAE TODOS LOS DATOS DEL USUARIO Y LOS PONE EN LA VARIABLE usuario_jquery
 	var usuario_jquery = <?php echo json_encode($sesion); ?>;
 	var turno_usuario =  verficiar_Turnos();
+
+	var detectar="", sen=0;
+	cargar_habitaciones();
 
 
 </script>
