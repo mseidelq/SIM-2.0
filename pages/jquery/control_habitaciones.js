@@ -1,5 +1,6 @@
 var lista_habitaciones;
 var lista_precios;
+var precios=[];
 
 //CARGAR LAS Habitaciones
 $(document).ready(function(){
@@ -7,14 +8,20 @@ $(document).ready(function(){
   $(".btnHabitacion").click(function(){
 
       var cod_hab = $(this).val();
-  		var no_hab = lista_habitaciones[cod_hab]["Numero"];
-  		var tipo = lista_habitaciones[cod_hab]["CodTipoHab"];
+  		var no_hab = lista_habitaciones[cod_hab]["numero"];
+  		var tipo = lista_habitaciones[cod_hab]["tipo_hab_id"];
   		// SI YA ESTA OCUPADA LA HABITACION
-
+      if($('#btn'+no_hab).attr("data-target") == "#administrarHabitacion"){
+  			$("#tituloModalAdmin").text("Administrar habitación "+no_hab);
+  		}
   		//SI NO ESTA OCUPADA LA HABITACION
-
-
-  			// VA A BUSCAR LA LISTA QUE ESTA ACTIVA EN EL MOMENTO
+      else{
+        precios.length=0;
+        $('#select_servicio').empty();
+  			$('#placa').val("");
+  			$('#observaciones').val("");
+  			$("#tituloModal").text("Ocupar habitacion: "+no_hab);
+        // VA A BUSCAR LA LISTA QUE ESTA ACTIVA EN EL MOMENTO
   			$.ajax({
   			  type: 'POST',
   			  url: "sql/control_habitaciones.php",
@@ -25,6 +32,35 @@ $(document).ready(function(){
 
   			  async:false
   			});
+
+        if(lista_precios.length>0){
+				// VA A TRAER LOS SERVICIOS Y PRECIOS DE LA LISTA Y TIPO DE HABITACION SELECCIONADA
+          $.ajax({
+  				  type: 'POST',
+  				  url: "sql/control_habitaciones.php",
+  				  data: { "lista_activa": lista_precios[0]['lista_activa'], "tipo": tipo },
+  				  success: function(data){                
+                precios = JSON.parse(data);
+  							},
+
+  				  async:false
+  				});
+
+  				if(precios.length>0){
+  					$.each(precios, function(i, val){
+  						$("#select_servicio").append("<option value="+i+">"+val.descripcion+", Valor = $ "+val.valor_servicio+" </option>");
+  					});
+  				}
+  				else{
+  					alert("No hay precios configurados para el tipo de habitacion");
+  				}
+
+  			}
+  			else{
+  				alert("No hay lista de precios activada para el dia de hoy");
+  			}
+
+      }
 
   });
 
@@ -48,7 +84,7 @@ function cargar_habitaciones() {
 		$.each(lista_habitaciones, function(i, val){
 
 			$("#tabla_control_habitaciones").append("<tr id='tr"+val["numero"]+"'></tr>");
-      $("#tr"+val["numero"]).append("<td style='width:100px'><button type='button' class='btn btn-success btn-block btnHabitacion' id='btn"+val["numero"]+"' data-toggle='modal' data-target='#modalOcuparHabitacion' value="+i+">"+val["numero"]+"</button></td>");
+      $("#tr"+val["numero"]).append("<td style='width:100px'><button type='button' class='btn btn-success btn-block btnHabitacion' id='btn"+val["numero"]+"' data-toggle='modal' data-target='#modal_ocupar_habitacion' value="+i+">"+val["numero"]+"</button></td>");
 			$("#tr"+val["numero"]).append("<td style='width:180px'><div>"+val["nombre_tipo"]+"</div></td>");
 			$("#tr"+val["numero"]).append("<td style='width:100px; text-align:right' ><div id='ingresoF"+val["numero"]+"'></div></td>");
 			$("#tr"+val["numero"]).append("<td style='width:100px; text-align:right'><div id='ingresoH"+val["numero"]+"'></div></td>");

@@ -53,4 +53,28 @@ if(isset($_GET["habitaciones"]))
 		}
 	}
 
+	// PRECIOS PARA LA LISTA DE PRECIO ACTIVA
+
+	if(isset($_POST["lista_activa"]))
+	{
+		$listaSeleccionada = $_POST["lista_activa"];
+		$tipo = $_POST["tipo"];
+
+		$conexion = mysqli_connect($servername,$username,$password, $dbname);
+
+		$consulta = "CALL s_precios_lista_habitacion($listaSeleccionada,$tipo)";
+
+		if (!$conexion) {
+			die("Connection failed: " . mysqli_connect_error());
+		}
+
+		$resultado = mysqli_query($conexion, $consulta);
+		$datos = array();
+
+		while($row = mysqli_fetch_assoc($resultado))
+			$datos[] = $row;
+
+		echo json_encode($datos);
+	}
+
 ?>

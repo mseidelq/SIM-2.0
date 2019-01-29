@@ -36,6 +36,7 @@ else {
 <?php
 include("menu.php");
 include("modales/modales.php");
+include("modales/modales_control_habitacion.php");
 
 //include("phpFunciones/funciones.php");
 	  //include("modales/modales.php");
