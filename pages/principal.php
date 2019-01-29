@@ -29,6 +29,7 @@ else {
 <link href="../css/csspropios.css" rel="stylesheet" type="text/css">
 <link rel="stylesheet" href="../css/font-awesome-4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="css/modal_control_habitacion.css">
 
 </head>
 
@@ -77,7 +78,7 @@ include("modales/modales_control_habitacion.php");
 									<thead class="bg-primary">
 									<tr>
 										<th >Hab</th>
-										<th >Tipo</th>
+										<th>Tipo</th>
 										<th  colspan="2">Ingreso</th>
 										<th colspan="2">Salida</th>
 										<th >Faltante</th>

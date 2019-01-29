@@ -20,7 +20,7 @@ $(document).ready(function(){
         $('#select_servicio').empty();
   			$('#placa').val("");
   			$('#observaciones').val("");
-  			$("#tituloModal").text("Ocupar habitacion: "+no_hab);
+  			$("#titulo_modal").text("Ocupar habitacion: "+no_hab);
         // VA A BUSCAR LA LISTA QUE ESTA ACTIVA EN EL MOMENTO
   			$.ajax({
   			  type: 'POST',
@@ -39,7 +39,7 @@ $(document).ready(function(){
   				  type: 'POST',
   				  url: "sql/control_habitaciones.php",
   				  data: { "lista_activa": lista_precios[0]['lista_activa'], "tipo": tipo },
-  				  success: function(data){                
+  				  success: function(data){
                 precios = JSON.parse(data);
   							},
 
