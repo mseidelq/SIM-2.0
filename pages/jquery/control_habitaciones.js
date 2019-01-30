@@ -4,7 +4,7 @@ var precios=[];
 
 //CARGAR LAS Habitaciones
 $(document).ready(function(){
-
+  //$(".btnHabitacion").hide();
   $(".btnHabitacion").click(function(){
 
       var cod_hab = $(this).val();
@@ -84,7 +84,7 @@ function cargar_habitaciones() {
 		$.each(lista_habitaciones, function(i, val){
 
 			$("#tabla_control_habitaciones").append("<tr id='tr"+val["numero"]+"'></tr>");
-      $("#tr"+val["numero"]).append("<td style='width:100px'><button type='button' class='btn btn-success btn-block btnHabitacion' id='btn"+val["numero"]+"' data-toggle='modal' data-target='#modal_ocupar_habitacion' value="+i+">"+val["numero"]+"</button></td>");
+      $("#tr"+val["numero"]).append("<td style='width:100px'><button type='button' class='btn btn-success btn-block btnHabitacion' id='btn"+val["numero"]+"' data-toggle='modal' data-target='#modal_ocupar_habitacion' value="+i+" hidden>"+val["numero"]+"</button></td>");
 			$("#tr"+val["numero"]).append("<td style='width:180px'><div>"+val["nombre_tipo"]+"</div></td>");
 			$("#tr"+val["numero"]).append("<td style='width:100px; text-align:right' ><div id='ingresoF"+val["numero"]+"'></div></td>");
 			$("#tr"+val["numero"]).append("<td style='width:100px; text-align:right'><div id='ingresoH"+val["numero"]+"'></div></td>");
@@ -112,13 +112,17 @@ function cargar_habitaciones() {
 
 
 $(document).keypress(function(event){
+
   if(event.which==51 && sen == 0){
     detectar = String.fromCharCode(event.which);
     sen = 1;
   }
   else{
       if(event.which == 13){
-        alert(detectar); sen = 0; detectar ="";
+        //alert();
+        event.preventDefault();
+        $("#btn"+detectar.substr(6,3)).click();
+        sen = 0; detectar ="";
         //BUSCAR LA HABITACION Y/O PRODUCTO
       }else{
         if(sen == 1){
