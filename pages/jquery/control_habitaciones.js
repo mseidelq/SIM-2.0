@@ -1,6 +1,7 @@
 var lista_habitaciones;
 var lista_precios;
 var precios=[];
+var no_hab;
 
 //CARGAR LAS Habitaciones
 $(document).ready(function(){
@@ -8,10 +9,10 @@ $(document).ready(function(){
   $(".btnHabitacion").click(function(){
 
       var cod_hab = $(this).val();
-  		var no_hab = lista_habitaciones[cod_hab]["numero"];
+  		no_hab = lista_habitaciones[cod_hab]["numero"];
   		var tipo = lista_habitaciones[cod_hab]["tipo_hab_id"];
   		// SI YA ESTA OCUPADA LA HABITACION
-      if($('#btn'+no_hab).attr("data-target") == "#administrarHabitacion"){
+      if($('#btn'+no_hab).attr("data-target") == "#administrar_habitacion"){
   			$("#tituloModalAdmin").text("Administrar habitación "+no_hab);
   		}
   		//SI NO ESTA OCUPADA LA HABITACION
@@ -63,6 +64,21 @@ $(document).ready(function(){
       }
 
   });
+
+  $("#btn_ocupar").click(function(){
+
+		$('#btn'+no_hab).attr("data-target","#administrar_habitacion"); //SE CAMBIA EL MODAL
+		$('#tr'+no_hab).attr("class","success"); // SE MARCA EN VERDE LA OCUPACION
+		var servicio = $("#select_servicio").val();
+		var horas = precios[servicio]['cantidad'];
+		var ocupacion = []; var v0=0; var fecha;
+		$('#btn'+no_hab).click();
+
+		//TRAE LA HORA ACTUAL DEL SERVIDOR
+
+		// MARCA GRAFICAMENTE DE VERDE LA OCUPACION
+
+	});
 
 });
 

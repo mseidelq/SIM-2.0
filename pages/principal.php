@@ -142,6 +142,8 @@ include("modales/modales_control_habitacion.php");
 
 	var detectar="", sen=0;
 	cargar_habitaciones();
+	// DESPUES DE SELECCIONAR EL SERVICIO REQUERIDO SE DA CLICK EN OCUPAR
+	
 
 
 </script>
