@@ -112,7 +112,28 @@ if(isset($_GET["habitaciones"]))
 			echo json_encode($data);
 		}
 
+	}
 
+	if(isset($_POST['ocupadas'])){
+
+		$datos = $_POST['ocupadas'];
+
+		$insertar  = "SELECT * FROM v_habitaciones_ocupadas";
+
+		$conexion = mysqli_connect($servername,$username,$password, $dbname);
+
+		if (!$conexion) {
+			die("Connection failed: " . mysqli_connect_error());
+		}
+		$resultado = mysqli_query($conexion, $insertar);
+		$datos = array();
+		if($resultado)
+		{
+			while($row = mysqli_fetch_assoc($resultado))
+				$data [] = $row;
+
+			echo json_encode($data);
+		}
 
 	}
 

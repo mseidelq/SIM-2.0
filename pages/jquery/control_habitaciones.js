@@ -68,12 +68,8 @@ $(document).ready(function(){
 
   $("#btn_ocupar").click(function(){
 
-		$('#btn'+no_hab).attr("data-target","#administrar_habitacion"); //SE CAMBIA EL MODAL
-		$('#tr'+no_hab).attr("class","success"); // SE MARCA EN VERDE LA OCUPACION
-
     var servicio = $("#select_servicio").val();
     var observacion = $("#observaciones").val().toUpperCase();
-    alert(observacion);
 		var horas = precios[servicio]['cantidad'];
     var valor = precios[servicio]['valor_servicio'];
     var iva = precios[servicio]['valor_iva'];
@@ -89,34 +85,43 @@ $(document).ready(function(){
       var ocupado = JSON.parse(data);
       if(!ocupado.resultado)
       {
-        $("#ocupacion"+no_hab).val(ocupado.ocupacion_id); $('#btn'+no_hab).click();
-        $("#ingresoF"+no_hab).html(ocupado.fecha_ingreso.substr(0,10));
-        $("#ingresoH"+no_hab).html("<strong>"+ocupado.fecha_ingreso.substr(10,14)+"</strong>");
-        $("#salidaF"+no_hab).html(ocupado.fecha_estimada.substr(0,10));
-        $("#salidaH"+no_hab).html("<strong>"+ocupado.fecha_estimada.substr(10,14)+"</strong>");
-        $("#faltante"+no_hab).html(ocupado.tiempo_faltante);
-        $("#extra"+no_hab).html(ocupado.horas_extras);
-        $("#servicio"+no_hab).html(ocupado.horas+" Horas");
-        $("#total"+no_hab).html(ocupado.valor_total); var saldo_ = (ocupado.valor_total-ocupado.valor_pagado)*1;
-        $("#saldo"+no_hab).html(saldo_);
-        $("#observaciones"+no_hab).html(ocupado.observacion);
-        $("#placa"+no_hab).html(ocupado.no_placa);
-
-        $(".moneda").priceFormat({ prefix: '', centsLimit: 0});
-
-
+        marca_ocupadas(ocupado);
       }
       else alert(ocupado.resultado+" - "+ocupado.mensaje);
 
 		});
 
-		//TRAE LA HORA ACTUAL DEL SERVIDOR
-
-		// MARCA GRAFICAMENTE DE VERDE LA OCUPACION
-
 	});
 
 });
+
+function marca_ocupadas(ocupado) {
+  var no = ocupado.numero;
+  $('#btn'+no).attr("data-target","#administrar_habitacion"); //SE CAMBIA EL MODAL
+  if(ocupado.tiempo_faltante>'00:15:00') {
+    $('#tr'+no).attr("class","success"); // SE MARCA EN VERDE LA OCUPACION
+  }
+  else if(ocupado.tiempo_faltante>'00:00:00'){
+    $('#tr'+no).attr("class","warning");
+  }
+  else{
+    $('#tr'+no).attr("class","danger");
+  }
+
+  $("#ocupacion"+no).val(ocupado.ocupacion_id); $('#btn'+no_hab).click();
+  $("#ingresoF"+no).html(ocupado.fecha_ingreso.substr(0,10));
+  $("#ingresoH"+no).html("<strong>"+ocupado.fecha_ingreso.substr(10,14)+"</strong>");
+  $("#salidaF"+no).html(ocupado.fecha_estimada.substr(0,10));
+  $("#salidaH"+no).html("<strong>"+ocupado.fecha_estimada.substr(10,14)+"</strong>");
+  $("#faltante"+no).html(ocupado.tiempo_faltante);
+  $("#extra"+no).html(ocupado.horas_extras);
+  $("#servicio"+no).html(ocupado.horas+" Horas");
+  $("#total"+no).html(ocupado.valor_total); var saldo_ = (ocupado.valor_total-ocupado.valor_pagado)*1;
+  $("#saldo"+no).html(saldo_);
+  $("#observaciones"+no).html(ocupado.observacion);
+  $("#placa"+no).html(ocupado.no_placa);
+  $(".moneda").priceFormat({ prefix: '', centsLimit: 0});
+}
 
 function cargar_habitaciones() {
 
@@ -155,6 +160,28 @@ function cargar_habitaciones() {
 			//alert(_habitaciones[i].getParametros());
 
 		});
+    var ocupadas;
+    $.ajax({
+  	  type: 'POST',
+  	  url: "sql/control_habitaciones.php",
+  	  data: {"ocupadas": "traer"},
+  	  success: function(data){
+
+          ocupadas = JSON.parse(data);
+  				},
+
+  	  async:false
+  	});
+
+  	if(ocupadas.length>0){
+
+  		$.each(ocupadas, function(i, val){
+
+        marca_ocupadas(val)
+  			//alert(_habitaciones[i].getParametros());
+
+  		});
+    }
   }
 		//conteo();
 }
