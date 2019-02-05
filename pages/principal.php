@@ -140,7 +140,7 @@ include("modales/modales_control_habitacion.php");
 	var usuario_jquery = <?php echo json_encode($sesion); ?>;
 	var turno_usuario =  verficiar_Turnos();
 	var turno_id;
-
+	
 	var detectar="", sen=0;
 	cargar_habitaciones();
 	// DESPUES DE SELECCIONAR EL SERVICIO REQUERIDO SE DA CLICK EN OCUPAR

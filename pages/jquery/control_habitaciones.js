@@ -3,6 +3,7 @@ var lista_precios;
 var precios=[];
 var no_hab;
 var habitacion_id;
+var conteo_intervalo;
 //CARGAR LAS Habitaciones
 $(document).ready(function(){
   //$(".btnHabitacion").hide();
@@ -85,7 +86,7 @@ $(document).ready(function(){
       var ocupado = JSON.parse(data);
       if(!ocupado.resultado)
       {
-        marca_ocupadas(ocupado);
+        marca_ocupadas(ocupado); $('#btn'+no_hab).click();
       }
       else alert(ocupado.resultado+" - "+ocupado.mensaje);
 
@@ -105,9 +106,10 @@ function marca_ocupadas(ocupado) {
     $('#tr'+no).attr("class","warning");
   }else{
     $('#tr'+no).attr("class","danger");
+    ocupado.tiempo_faltante = ocupado.tiempo_faltante.substr(1,8)
   }
 
-  $("#ocupacion"+no).val(ocupado.ocupacion_id); $('#btn'+no_hab).click();
+  $("#ocupacion"+no).val(ocupado.ocupacion_id);
   $("#ingresoF"+no).html(ocupado.fecha_ingreso.substr(0,10));
   $("#ingresoH"+no).html("<strong>"+ocupado.fecha_ingreso.substr(10,14)+"</strong>");
   $("#salidaF"+no).html(ocupado.fecha_estimada.substr(0,10));
@@ -165,12 +167,8 @@ function cargar_habitaciones() {
 }
 
 function conteo(){
-
 	ocupadas();
-
-	var x = setInterval(ocupadas
-
-	, 5000);
+	var x = setInterval(ocupadas, 5000);
 }
 
 function ocupadas() {
@@ -188,12 +186,8 @@ function ocupadas() {
   });
 
   if(ocupadas.length>0){
-
     $.each(ocupadas, function(i, val){
-
-      marca_ocupadas(val)
-      //alert(_habitaciones[i].getParametros());
-
+      marca_ocupadas(val);
     });
   }
 }
