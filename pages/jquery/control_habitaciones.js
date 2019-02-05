@@ -98,13 +98,12 @@ $(document).ready(function(){
 function marca_ocupadas(ocupado) {
   var no = ocupado.numero;
   $('#btn'+no).attr("data-target","#administrar_habitacion"); //SE CAMBIA EL MODAL
+
   if(ocupado.tiempo_faltante>'00:15:00') {
     $('#tr'+no).attr("class","success"); // SE MARCA EN VERDE LA OCUPACION
-  }
-  else if(ocupado.tiempo_faltante>'00:00:00'){
+  }else if(ocupado.tiempo_faltante>'00:00:00'){
     $('#tr'+no).attr("class","warning");
-  }
-  else{
+  }else{
     $('#tr'+no).attr("class","danger");
   }
 
@@ -160,35 +159,44 @@ function cargar_habitaciones() {
 			//alert(_habitaciones[i].getParametros());
 
 		});
-    var ocupadas;
-    $.ajax({
-  	  type: 'POST',
-  	  url: "sql/control_habitaciones.php",
-  	  data: {"ocupadas": "traer"},
-  	  success: function(data){
-
-          ocupadas = JSON.parse(data);
-  				},
-
-  	  async:false
-  	});
-
-  	if(ocupadas.length>0){
-
-  		$.each(ocupadas, function(i, val){
-
-        marca_ocupadas(val)
-  			//alert(_habitaciones[i].getParametros());
-
-  		});
-    }
+    conteo();
   }
 		//conteo();
 }
 
+function conteo(){
 
+	ocupadas();
 
+	var x = setInterval(ocupadas
 
+	, 5000);
+}
+
+function ocupadas() {
+  var ocupadas;
+  $.ajax({
+    type: 'POST',
+    url: "sql/control_habitaciones.php",
+    data: {"ocupadas": "traer"},
+    success: function(data){
+
+        ocupadas = JSON.parse(data);
+        },
+
+    async:false
+  });
+
+  if(ocupadas.length>0){
+
+    $.each(ocupadas, function(i, val){
+
+      marca_ocupadas(val)
+      //alert(_habitaciones[i].getParametros());
+
+    });
+  }
+}
 
 $(document).keypress(function(event){
 
