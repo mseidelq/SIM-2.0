@@ -27,7 +27,7 @@
 				<div class="form-group"  style="width:100%" >
 					<div class="col-lg-12 servicio">
 						<label for="observaciones">Observaciones</label>
-						<textarea  class="form-control" name="" value=""></textarea>
+						<textarea  class="form-control" name="" value="" id="observaciones"></textarea>
 					</div>
 					<div class="servicio">
 						<button type="button" id="btn_ocupar" class="btn btn-info servicio"  data-dismiss="modal">Ocupar habitacion</button>

@@ -2,7 +2,7 @@ var lista_habitaciones;
 var lista_precios;
 var precios=[];
 var no_hab;
-
+var habitacion_id;
 //CARGAR LAS Habitaciones
 $(document).ready(function(){
   //$(".btnHabitacion").hide();
@@ -10,6 +10,7 @@ $(document).ready(function(){
 
       var cod_hab = $(this).val();
   		no_hab = lista_habitaciones[cod_hab]["numero"];
+      habitacion_id = lista_habitaciones[cod_hab]["habitacion_id"];
   		var tipo = lista_habitaciones[cod_hab]["tipo_hab_id"];
   		// SI YA ESTA OCUPADA LA HABITACION
       if($('#btn'+no_hab).attr("data-target") == "#administrar_habitacion"){
@@ -69,10 +70,45 @@ $(document).ready(function(){
 
 		$('#btn'+no_hab).attr("data-target","#administrar_habitacion"); //SE CAMBIA EL MODAL
 		$('#tr'+no_hab).attr("class","success"); // SE MARCA EN VERDE LA OCUPACION
-		var servicio = $("#select_servicio").val();
+
+    var servicio = $("#select_servicio").val();
+    var observacion = $("#observaciones").val().toUpperCase();
+    alert(observacion);
 		var horas = precios[servicio]['cantidad'];
+    var valor = precios[servicio]['valor_servicio'];
+    var iva = precios[servicio]['valor_iva'];
+    var id_precio_servicio = precios[servicio]['id_precio_servicio'];
+    var descripcion = precios[servicio]['descripcion'];
 		var ocupacion = []; var v0=0; var fecha;
-		$('#btn'+no_hab).click();
+
+    ocupacion.push(habitacion_id); ocupacion.push(horas); ocupacion.push(valor); ocupacion.push(turno_id); ocupacion.push(id_precio_servicio);
+    ocupacion.push(iva); ocupacion.push(descripcion); ocupacion.push(observacion);
+
+    // GUARDAR LA OCUPACION
+		$.post("sql/control_habitaciones.php", {"ocupacion":ocupacion} ,function(data){
+      var ocupado = JSON.parse(data);
+      if(!ocupado.resultado)
+      {
+        $("#ocupacion"+no_hab).val(ocupado.ocupacion_id); $('#btn'+no_hab).click();
+        $("#ingresoF"+no_hab).html(ocupado.fecha_ingreso.substr(0,10));
+        $("#ingresoH"+no_hab).html("<strong>"+ocupado.fecha_ingreso.substr(10,14)+"</strong>");
+        $("#salidaF"+no_hab).html(ocupado.fecha_estimada.substr(0,10));
+        $("#salidaH"+no_hab).html("<strong>"+ocupado.fecha_estimada.substr(10,14)+"</strong>");
+        $("#faltante"+no_hab).html(ocupado.tiempo_faltante);
+        $("#extra"+no_hab).html(ocupado.horas_extras);
+        $("#servicio"+no_hab).html(ocupado.horas+" Horas");
+        $("#total"+no_hab).html(ocupado.valor_total); var saldo_ = (ocupado.valor_total-ocupado.valor_pagado)*1;
+        $("#saldo"+no_hab).html(saldo_);
+        $("#observaciones"+no_hab).html(ocupado.observacion);
+        $("#placa"+no_hab).html(ocupado.no_placa);
+
+        $(".moneda").priceFormat({ prefix: '', centsLimit: 0});
+
+
+      }
+      else alert(ocupado.resultado+" - "+ocupado.mensaje);
+
+		});
 
 		//TRAE LA HORA ACTUAL DEL SERVIDOR
 
@@ -109,9 +145,9 @@ function cargar_habitaciones() {
 			$("#tr"+val["numero"]).append("<td style='width:80px; text-align:right'><div id='faltante"+val["numero"]+"'></div></td>");
 			$("#tr"+val["numero"]).append("<td style='width:90px; text-align:right'><div id='extra"+val["numero"]+"'></div></td>");
 			$("#tr"+val["numero"]).append("<td style='width:90px; text-align:right'><div id='servicio"+val["numero"]+"'></div></td>");
-			$("#tr"+val["numero"]).append("<td style='width:90px; text-align:right'><div id='vlrServicio"+val["numero"]+"' class='moneda'></div></td>");
-			$("#tr"+val["numero"]).append("<td style='width:90px; text-align:right'><div id='vlrExtra"+val["numero"]+"' class='moneda'></div></td>");
-			$("#tr"+val["numero"]).append("<td style='width:130px; text-align:right'><div id='vlrConsumo"+val["numero"]+"' class='moneda'></div></td>");
+			//$("#tr"+val["numero"]).append("<td style='width:90px; text-align:right'><div id='vlrServicio"+val["numero"]+"' class='moneda'></div></td>");
+			//$("#tr"+val["numero"]).append("<td style='width:90px; text-align:right'><div id='vlrExtra"+val["numero"]+"' class='moneda'></div></td>");
+			//$("#tr"+val["numero"]).append("<td style='width:130px; text-align:right'><div id='vlrConsumo"+val["numero"]+"' class='moneda'></div></td>");
 			$("#tr"+val["numero"]).append("<td style='width:140px; text-align:right';><div id='total"+val["numero"]+"' class='moneda'></div></td>");
 			$("#tr"+val["numero"]).append("<td style='width:140px; text-align:right';><div id='saldo"+val["numero"]+"' class='moneda'></div></td>");
 			$("#tr"+val["numero"]).append("<td style='width:140px'><div id='placa"+val["numero"]+"'></td>");

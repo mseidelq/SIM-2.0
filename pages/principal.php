@@ -65,31 +65,31 @@ include("modales/modales_control_habitacion.php");
       		<input type="text" id="codigobarras" hidden="true">
        		<div class="row">
 
-				<div class="col-lg-12 col-md-6">
+				<div class="col-lg-12">
 					<div class="panel panel-info">
 					  <div class="panel-heading">OCUPACION HABITACIONES</div>
 					  <div class="panel-body">
 
-						<div class="col-lg-12 col-md-12">
+						<div style="width:100%">
 
 							<div class="table-responsive">
 
 								<table id="tabla_control_habitaciones" class="table-hover display table" style="width:100%" border>
 									<thead class="bg-primary">
 									<tr>
-										<th >Hab</th>
-										<th>Tipo</th>
-										<th  colspan="2">Ingreso</th>
-										<th colspan="2">Salida</th>
-										<th >Faltante</th>
-										<th >H. Extra</th>
-										<th >Servicio</th>
-										<th >Vlr.Servicio</th>
+										<th style="width:5%">Hab</th>
+										<th style="width:7%">Tipo</th>
+										<th style="width:11%" colspan="2">Ingreso</th>
+										<th style="width:11%" colspan="2">Salida</th>
+										<th style="width:5%" >Faltante</th>
+										<th style="width:5%" >H. Extra</th>
+										<th style="width:5%" >Servicio</th>
+										<!--<th >Vlr.Servicio</th>
 										<th >Vlr.Extra</th>
-										<th >Consumos</th>
-										<th >Total</th>
-										<th >Saldo</th>
-										<th >Placa</th>
+										<th >Consumos</th>-->
+										<th style="width:6%" >Valor Total</th>
+										<th style="width:6%">Saldo</th>
+										<th style="width:5%" >Placa</th>
 										<th >Observaciones</th>
 									</tr>
 									</thead>
@@ -139,11 +139,12 @@ include("modales/modales_control_habitacion.php");
 	// TRAE TODOS LOS DATOS DEL USUARIO Y LOS PONE EN LA VARIABLE usuario_jquery
 	var usuario_jquery = <?php echo json_encode($sesion); ?>;
 	var turno_usuario =  verficiar_Turnos();
+	var turno_id;
 
 	var detectar="", sen=0;
 	cargar_habitaciones();
 	// DESPUES DE SELECCIONAR EL SERVICIO REQUERIDO SE DA CLICK EN OCUPAR
-	
+
 
 
 </script>

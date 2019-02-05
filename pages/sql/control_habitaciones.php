@@ -77,4 +77,43 @@ if(isset($_GET["habitaciones"]))
 		echo json_encode($datos);
 	}
 
+	// INSERTAR OCUPACION DE LA HABITACION
+	if(isset($_POST['ocupacion'])){
+
+		$datos = $_POST['ocupacion'];
+
+		$insertar  = "CALL p_i_iniciar_ocupacion($datos[0], $datos[1], $datos[2], $datos[3], $datos[4], $datos[5], '$datos[6]', '$datos[7]' )";
+		// YA GUARDA EN LA BASE DE DATOS DE OCUPACION
+
+		//** verificar si la habitacion ya está ocupada
+		$conexion = mysqli_connect($servername,$username,$password, $dbname);
+
+		if (!$conexion) {
+			die("Connection failed: " . mysqli_connect_error());
+		}
+		$resultado = mysqli_query($conexion, $insertar);
+
+		if($resultado)
+		{
+
+			//$consulta = "SELECT ocupacion_id FROM h_ocupacion WHERE habitacion_id = $datos[0] AND estado = 'OCUPADO'";
+			//$resultado2 = mysqli_query($conexion, $consulta);
+
+			//$data [] = "Exito";
+			while($row = mysqli_fetch_assoc($resultado))
+				$data = $row;
+
+			echo json_encode($data);
+		}
+		else
+		{
+			$data [] = "Error";
+			$data [] = "La habitacion ya esta ocupada";
+			echo json_encode($data);
+		}
+
+
+
+	}
+
 ?>
