@@ -111,10 +111,10 @@ include("modales/modales_control_habitacion.php");
        		</div>
 
        		<audio id="15left">
-       			<source src="../mp3/15left.mp3" type="audio/mp3" />
+       			<source src="/SIM 2.0/mp3/15left.mp3" type="audio/mp3" />
        		</audio>
        		<audio id="timeout">
-       			<source src="../mp3/timeout.mp3" type="audio/mp3" />
+       			<source src="/SIM 2.0/mp3/timeout.mp3" type="audio/mp3" />
        		</audio>
         </div>
 
@@ -140,7 +140,7 @@ include("modales/modales_control_habitacion.php");
 	var usuario_jquery = <?php echo json_encode($sesion); ?>;
 	var turno_usuario =  verficiar_Turnos();
 	var turno_id;
-	
+
 	var detectar="", sen=0;
 	cargar_habitaciones();
 	// DESPUES DE SELECCIONAR EL SERVICIO REQUERIDO SE DA CLICK EN OCUPAR

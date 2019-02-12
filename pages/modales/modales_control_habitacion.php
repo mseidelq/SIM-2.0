@@ -17,9 +17,9 @@
 						<select class="form-control" name="select_servicio" id="select_servicio" placeholder="Seleccione servicio" required>
 				  	</select>
 					</div>
-					<div class="col-lg-6 servicio">
+					<div class="col-lg-6 servicio ui-front">
 						<label for="placa">Placa vehiculo</label>
-						<input class="form-control" type="text" name="" value="">
+						<input class="form-control" id="placa" maxlength="6">
 					</div>
 
 

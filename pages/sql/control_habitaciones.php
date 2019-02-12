@@ -82,7 +82,7 @@ if(isset($_GET["habitaciones"]))
 
 		$datos = $_POST['ocupacion'];
 
-		$insertar  = "CALL p_i_iniciar_ocupacion($datos[0], $datos[1], $datos[2], $datos[3], $datos[4], $datos[5], '$datos[6]', '$datos[7]' )";
+		$insertar  = "CALL p_i_iniciar_ocupacion($datos[0], $datos[1], $datos[2], $datos[3], $datos[4], $datos[5], '$datos[6]', '$datos[7]' , $datos[8])";
 		// YA GUARDA EN LA BASE DE DATOS DE OCUPACION
 
 		//** verificar si la habitacion ya está ocupada
@@ -132,6 +132,63 @@ if(isset($_GET["habitaciones"]))
 			while($row = mysqli_fetch_assoc($resultado))
 				$data [] = $row;
 
+			echo json_encode($data);
+		}
+		else{
+			$data = "NO";
+			echo json_encode($data);
+		}
+
+	}
+
+	if(isset($_POST['placas'])){
+
+		$conexion = mysqli_connect($servername,$username,$password, $dbname);
+
+		$consulta = "SELECT * FROM i_placas";
+
+		if (!$conexion) {
+			die("Connection failed: " . mysqli_connect_error());
+		}
+
+		$resultado = mysqli_query($conexion, $consulta);
+		$datos = array();
+
+		while($row = mysqli_fetch_assoc($resultado)){
+
+			$nom = (object)array('label'=>$row['no_placa']." [".$row['tipo_vehiculo']."]", 'value'=>$row['no_placa']." [".$row['tipo_vehiculo']."]", 'id'=>$row['placa_id']);
+			//$nom = $row['no_placa']." [".$row['tipo_vehiculo']."]";
+			$datos[] = $nom;
+		}
+
+		echo json_encode($datos);
+	}
+
+	//INSERTAR PLACA NUEVA
+	if(isset($_POST['tipo_vehiculo'])){
+
+		$tipo = $_POST['tipo_vehiculo'];
+		$placa = $_POST['placa'];
+
+		$insertar  = "CALL p_i_insertar_placa('$placa','$tipo')";
+
+		$conexion = mysqli_connect($servername,$username,$password, $dbname);
+
+		if (!$conexion) {
+			die("Connection failed: " . mysqli_connect_error());
+		}
+		$resultado = mysqli_query($conexion, $insertar);
+
+		if($resultado)
+		{
+			while($row = mysqli_fetch_assoc($resultado))
+				$data = $row;
+
+			echo json_encode($data);
+		}
+		else
+		{
+			$data [] = "ERROR";
 			echo json_encode($data);
 		}
 

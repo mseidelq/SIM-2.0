@@ -4,15 +4,18 @@ var precios=[];
 var no_hab;
 var habitacion_id;
 var conteo_intervalo;
+var senal_sonido = 0;
+var placas;
+var placa=0;
 //CARGAR LAS Habitaciones
 $(document).ready(function(){
   //$(".btnHabitacion").hide();
-  $(".btnHabitacion").click(function(){
 
-      var cod_hab = $(this).val();
-  		no_hab = lista_habitaciones[cod_hab]["numero"];
+  $(".btnHabitacion").click(function(){
+      var cod_hab   = $(this).val();
+  		no_hab        = lista_habitaciones[cod_hab]["numero"];
       habitacion_id = lista_habitaciones[cod_hab]["habitacion_id"];
-  		var tipo = lista_habitaciones[cod_hab]["tipo_hab_id"];
+  		var tipo      = lista_habitaciones[cod_hab]["tipo_hab_id"];
   		// SI YA ESTA OCUPADA LA HABITACION
       if($('#btn'+no_hab).attr("data-target") == "#administrar_habitacion"){
   			$("#tituloModalAdmin").text("Administrar habitación "+no_hab);
@@ -20,8 +23,21 @@ $(document).ready(function(){
   		//SI NO ESTA OCUPADA LA HABITACION
       else{
         precios.length=0;
+        $('#placa').val("");
+        placas = traer_placas();
+        placa=0;
+
+        $("#placa").autocomplete({
+          source: placas,
+        	select: function (event, item) {
+						placa = item.item.id;
+            //alert(placa);
+  				}
+        });
+        //$("#placa").attr('autocomplete', 'on');
+
         $('#select_servicio').empty();
-  			$('#placa').val("");
+  			//$('#placa').val("");
   			$('#observaciones').val("");
   			$("#titulo_modal").text("Ocupar habitacion: "+no_hab);
         // VA A BUSCAR LA LISTA QUE ESTA ACTIVA EN EL MOMENTO
@@ -40,6 +56,7 @@ $(document).ready(function(){
 				// VA A TRAER LOS SERVICIOS Y PRECIOS DE LA LISTA Y TIPO DE HABITACION SELECCIONADA
           $.ajax({
   				  type: 'POST',
+
   				  url: "sql/control_habitaciones.php",
   				  data: { "lista_activa": lista_precios[0]['lista_activa'], "tipo": tipo },
   				  success: function(data){
@@ -67,6 +84,31 @@ $(document).ready(function(){
 
   });
 
+  $("#placa").change(function(){
+    var valor_placa = $("#placa").val().toUpperCase();
+    var tipo_vehiculo;
+    if(placa == 0 && valor_placa.length > 2){
+      if(confirm("La placa "+valor_placa+" es correcta ?")){
+        if(confirm("Carro = Aceptar      Moto = Cancelar")) tipo_vehiculo = "CARRO";
+        else tipo_vehiculo = "MOTO";
+      }
+
+    }
+    $.ajax({
+      type: 'POST',
+      url: "sql/control_habitaciones.php",
+      data: { "tipo_vehiculo": tipo_vehiculo, "placa": valor_placa },
+      success: function(data){
+          var p = JSON.parse(data);
+          placa = p.ret_placa;
+
+
+      },
+      async:false
+    });
+  });
+
+
   $("#btn_ocupar").click(function(){
 
     var servicio = $("#select_servicio").val();
@@ -77,9 +119,10 @@ $(document).ready(function(){
     var id_precio_servicio = precios[servicio]['id_precio_servicio'];
     var descripcion = precios[servicio]['descripcion'];
 		var ocupacion = []; var v0=0; var fecha;
+    if(placa == 0) placa = 1;
 
     ocupacion.push(habitacion_id); ocupacion.push(horas); ocupacion.push(valor); ocupacion.push(turno_id); ocupacion.push(id_precio_servicio);
-    ocupacion.push(iva); ocupacion.push(descripcion); ocupacion.push(observacion);
+    ocupacion.push(iva); ocupacion.push(descripcion); ocupacion.push(observacion); ocupacion.push(placa);
 
     // GUARDAR LA OCUPACION
 		$.post("sql/control_habitaciones.php", {"ocupacion":ocupacion} ,function(data){
@@ -101,11 +144,18 @@ function marca_ocupadas(ocupado) {
   $('#btn'+no).attr("data-target","#administrar_habitacion"); //SE CAMBIA EL MODAL
 
   if(ocupado.tiempo_faltante>'00:15:00') {
-    $('#tr'+no).attr("class","success"); // SE MARCA EN VERDE LA OCUPACION
+    if($('#tr'+no).attr("class")!="success") $('#tr'+no).attr("class","success"); // SE MARCA EN VERDE LA OCUPACION
   }else if(ocupado.tiempo_faltante>'00:00:00'){
-    $('#tr'+no).attr("class","warning");
+    if($('#tr'+no).attr("class")!="warning"){
+        $('#tr'+no).attr("class","warning");
+        if(senal_sonido==1) $("#15left")[0].play();
+    }
+
   }else{
-    $('#tr'+no).attr("class","danger");
+    if($('#tr'+no).attr("class")!="danger"){
+      $('#tr'+no).attr("class","danger");
+      if(senal_sonido==1) $("#timeout")[0].play();
+    }
     ocupado.tiempo_faltante = ocupado.tiempo_faltante.substr(1,8)
   }
 
@@ -123,6 +173,7 @@ function marca_ocupadas(ocupado) {
   $("#placa"+no).html(ocupado.no_placa);
   $(".moneda").priceFormat({ prefix: '', centsLimit: 0});
 }
+
 
 function cargar_habitaciones() {
 
@@ -161,13 +212,14 @@ function cargar_habitaciones() {
 			//alert(_habitaciones[i].getParametros());
 
 		});
+    ocupadas();
+    senal_sonido = 1;
     conteo();
   }
 		//conteo();
 }
 
 function conteo(){
-	ocupadas();
 	var x = setInterval(ocupadas, 5000);
 }
 
@@ -178,18 +230,33 @@ function ocupadas() {
     url: "sql/control_habitaciones.php",
     data: {"ocupadas": "traer"},
     success: function(data){
-
         ocupadas = JSON.parse(data);
         },
 
     async:false
   });
 
-  if(ocupadas.length>0){
+  if(ocupadas!=null){
     $.each(ocupadas, function(i, val){
       marca_ocupadas(val);
     });
   }
+}
+
+function traer_placas(){
+  var placas_;
+  $.ajax({
+    type: 'POST',
+    url: "sql/control_habitaciones.php",
+    data: {"placas": "traer"},
+    success: function(data){
+        placas_ = JSON.parse(data);
+        //placas_ = data;
+        },
+
+    async:false
+  });
+  return(placas_);
 }
 
 $(document).keypress(function(event){
