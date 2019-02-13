@@ -17,7 +17,9 @@ $(document).ready(function(){
       habitacion_id = lista_habitaciones[cod_hab]["habitacion_id"];
   		var tipo      = lista_habitaciones[cod_hab]["tipo_hab_id"];
   		// SI YA ESTA OCUPADA LA HABITACION
-      if($('#btn'+no_hab).attr("data-target") == "#administrar_habitacion"){
+      if($('#btn'+no_hab).attr("data-target") == "#modal_administrar_habitacion"){
+        var ocupacion_id = $("#ocupacion"+no_hab).val();
+        //obj_admin_habitacion = Admin_habitacion(ocupacion_id);
   			$("#tituloModalAdmin").text("Administrar habitación "+no_hab);
   		}
   		//SI NO ESTA OCUPADA LA HABITACION
@@ -141,7 +143,7 @@ $(document).ready(function(){
 
 function marca_ocupadas(ocupado) {
   var no = ocupado.numero;
-  $('#btn'+no).attr("data-target","#administrar_habitacion"); //SE CAMBIA EL MODAL
+  $('#btn'+no).attr("data-target","#modal_administrar_habitacion"); //SE CAMBIA EL MODAL
 
   if(ocupado.tiempo_faltante>'00:15:00') {
     if($('#tr'+no).attr("class")!="success") $('#tr'+no).attr("class","success"); // SE MARCA EN VERDE LA OCUPACION
@@ -269,7 +271,7 @@ $(document).keypress(function(event){
       if(event.which == 13){
         //alert();
         event.preventDefault();
-        $("#btn"+detectar.substr(6,3)).click();
+        $("#btn"+detectar.substr(6,3)).click();  //AQUI SE DEBE BUSCAR LA HABITACION POR CODIGO DE BARRAS
         sen = 0; detectar ="";
         //BUSCAR LA HABITACION Y/O PRODUCTO
       }else{
@@ -278,4 +280,91 @@ $(document).keypress(function(event){
         }
       }
   }
+
+  $("#modal_administrar_habitacion").on("show.bs.modal", function () {
+    $("#cantidad_producto").val("0");
+    $("#productos").val(""); $("#productos").click();
+  });
+
 });
+
+/*
+function Admin_habitacion(ocupacion) {
+
+    // CONSTRUCTOR QUE TRAE LA OCUPACION Y LOS PRODUCTOS DE LA HABITACION ==============================================================================
+  //this.numHab = numHab;
+	this.ocupacion = ocupacion
+	var _productos = traerProductosAgregados(this.ocupacion.IdOcupacion);;
+	var _valorTotalConsumos = 0, _pagado = this.ocupacion.ValorPagado, _saldo = this.ocupacion.ValorTotal-this.ocupacion.ValorPagado;
+
+	$.each(_productos, function(i, val){
+		$("#tablaProductosAgregados").append("<tr><td><input type='hidden' id='tIdProducto' val='"+val.IdProducto+"'>"+val.NombreGrupo+"</td><td>"+val.Nombre+"</td><td class='moneda'>"+val.ValorVenta+"</td><td id='tcantidad'>"+val.Cantidad+"</td><td id='tValorVenta' class='moneda'>"+(val.Cantidad*val.ValorVenta)+"</td><td></td></tr>");
+		_valorTotalConsumos += val.Cantidad*val.ValorVenta;
+	});
+
+	$("#vlrConsumo1").html(_valorTotalConsumos);
+	$("#vlrServicio").html(this.ocupacion.ValorServicio);
+	$("#vlrExtra").html(this.ocupacion.ValorExtra);
+	$("#vlrConsumo2").html(_valorTotalConsumos);
+	$("#vlrTotal").html(this.ocupacion.ValorTotal);
+	$("#vlrPagado").html(_pagado);
+	$("#vlrSaldo").html(_saldo).val(_saldo);
+
+	$(".moneda").priceFormat({ prefix: '', centsLimit: 0});
+	$(".moneda").css("text-align","right");
+	// =======================================================================================================================================================
+
+    this.agregarProducto = function(datosP){ //FUNCION AGREGAR PRODUCTOS
+    	var sen=0;
+
+		if(_productos.length>0){
+
+			$.each(_productos, function(i, val){
+				if(val.Nombre == datosP.Nombre){
+					_productos[i].Cantidad = _productos[i].Cantidad*1+datosP.Cantidad*1;
+					$("#tablaProductosAgregados tr").eq(i+1).find("#tcantidad").html(_productos[i].Cantidad);
+					$("#tablaProductosAgregados tr").eq(i+1).find("#tValorVenta").html(_productos[i].Cantidad*_productos[i].ValorVenta);
+					sen = 1;
+
+				}
+			});
+
+		}
+		if(sen == 0){
+			$("#tablaProductosAgregados").append("<tr><td><input type='hidden' id='tIdProducto' val='"+datosP.IdProducto+"'>"+datosP.NombreGrupo+"</td><td>"+datosP.Nombre+"</td><td class='moneda'>"+datosP.ValorVenta+"</td><td id='tcantidad'>"+datosP.Cantidad+"</td><td id='tValorVenta' class='moneda'>"+(datosP.Cantidad*datosP.ValorVenta)+"</td><td></td></tr>");
+
+			_productos.push(datosP);
+
+		}
+		var IdOcupacion = this.ocupacion.IdOcupacion;
+
+		// INSERTAR A LA TABLA DE VENTAS
+		$.post("sql/controlHabitaciones-sql.php",
+			{ "Consumos":datosP, "IdOcupacion": IdOcupacion  } ,
+			function(data){
+		});
+
+		_valorTotalConsumos = 0;
+		$.each(_productos, function(i, val){
+			_valorTotalConsumos += val.Cantidad*val.ValorVenta;
+		});
+
+		var _consumosTotal = this.ocupacion.ValorServicio*1 + this.ocupacion.ValorExtra*1 + _valorTotalConsumos*1;
+		_saldo = _consumosTotal-this.ocupacion.ValorPagado;
+
+		$("#vlrConsumo1").html(_valorTotalConsumos);
+		$("#vlrConsumo2").html(_valorTotalConsumos);
+		$("#vlrTotal").html(_consumosTotal);
+		$("#vlrPagado").html(_pagado);
+		$("#vlrSaldo").html(_saldo);
+
+		$("#vlrConsumo"+numHab).val(_valorTotalConsumos); $("#vlrConsumo"+numHab).html(_valorTotalConsumos);
+		$("#total"+numHab).val(_consumosTotal); $("#total"+numHab).html(_consumosTotal);
+		$("#saldo"+numHab).val(_saldo); $("#saldo"+numHab).html(_saldo);
+
+		$(".moneda").priceFormat({ prefix: '', centsLimit: 0});
+		$(".moneda").css("text-align","right");
+    }
+
+}
+*/

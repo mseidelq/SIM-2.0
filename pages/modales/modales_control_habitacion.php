@@ -50,7 +50,7 @@
 
 	<!-- MODAL DE AGREGAR ARTICULOS O FINALIZAR SERVICIO HABITACION -->
 
-	<div class="modal fade bd-example-modal-lg" id="administrar_habitacion" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+	<div class="modal fade bd-example-modal-lg" id="modal_administrar_habitacion" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
 	<div class="modal-dialog modal-lg"  role="document">
 
 	  <!-- Modal content-->
@@ -74,15 +74,15 @@
 								</div>
 								<div class="col-lg-2 divmodal">
 								  <div class=""><label>Valor: </label></div>
-								  <div id="valorP" class=""></div>
+								  <div id="valor_producto" class="moneda"></div>
 								</div>
 								<div class=" col-lg-2 divmodal">
-								  <label for="cantidadP">Cant: </label><br>
-								  <input type="number" id="cantidadP" maxlength="2" class="form-control ">
+								  <label for="cantidad_producto">Cant: </label><br>
+								  <input type="number" id="cantidad_producto" maxlength="2" class="form-control ">
 								</div>
 								<div class="col-lg-2 divmodal">
 								  <div class=""><label>Total: </label></div>
-								  <div id="valorT" class=""></div>
+								  <div id="valor_total_producto" class="moneda"></div>
 								</div>
 							</div>
 							<div class="col-lg-12"><hr></div>
