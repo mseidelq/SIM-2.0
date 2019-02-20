@@ -19,7 +19,9 @@ $(document).ready(function(){
   		// SI YA ESTA OCUPADA LA HABITACION
       if($('#btn'+no_hab).attr("data-target") == "#modal_administrar_habitacion"){
         var ocupacion_id = $("#ocupacion"+no_hab).val();
-        //obj_admin_habitacion = Admin_habitacion(ocupacion_id);
+
+        obj_admin_habitacion.set_ocupacion(ocupacion_id);
+        //obj_admin_habitacion.set_ocupacion(ocupacion_id);
   			$("#tituloModalAdmin").text("Administrar habitación "+no_hab);
   		}
   		//SI NO ESTA OCUPADA LA HABITACION
@@ -271,7 +273,7 @@ $(document).keypress(function(event){
       if(event.which == 13){
         //alert();
         event.preventDefault();
-        $("#btn"+detectar.substr(6,3)).click();  //AQUI SE DEBE BUSCAR LA HABITACION POR CODIGO DE BARRAS
+        $("#btn"+detectar.substr(5,3)).click();  //AQUI SE DEBE BUSCAR LA HABITACION POR CODIGO DE BARRAS
         sen = 0; detectar ="";
         //BUSCAR LA HABITACION Y/O PRODUCTO
       }else{
@@ -288,21 +290,17 @@ $(document).keypress(function(event){
 
 });
 
-/*
-function Admin_habitacion(ocupacion) {
+
+function Admin_habitacion() {
 
     // CONSTRUCTOR QUE TRAE LA OCUPACION Y LOS PRODUCTOS DE LA HABITACION ==============================================================================
   //this.numHab = numHab;
-	this.ocupacion = ocupacion
-	var _productos = traerProductosAgregados(this.ocupacion.IdOcupacion);;
-	var _valorTotalConsumos = 0, _pagado = this.ocupacion.ValorPagado, _saldo = this.ocupacion.ValorTotal-this.ocupacion.ValorPagado;
+	var _ocupacion;
 
-	$.each(_productos, function(i, val){
-		$("#tablaProductosAgregados").append("<tr><td><input type='hidden' id='tIdProducto' val='"+val.IdProducto+"'>"+val.NombreGrupo+"</td><td>"+val.Nombre+"</td><td class='moneda'>"+val.ValorVenta+"</td><td id='tcantidad'>"+val.Cantidad+"</td><td id='tValorVenta' class='moneda'>"+(val.Cantidad*val.ValorVenta)+"</td><td></td></tr>");
-		_valorTotalConsumos += val.Cantidad*val.ValorVenta;
-	});
+  var _productos;
+	var _valorTotalConsumos = 0, _pagado = 0, _saldo = 0;
 
-	$("#vlrConsumo1").html(_valorTotalConsumos);
+	/*$("#vlrConsumo1").html(_valorTotalConsumos);
 	$("#vlrServicio").html(this.ocupacion.ValorServicio);
 	$("#vlrExtra").html(this.ocupacion.ValorExtra);
 	$("#vlrConsumo2").html(_valorTotalConsumos);
@@ -311,60 +309,70 @@ function Admin_habitacion(ocupacion) {
 	$("#vlrSaldo").html(_saldo).val(_saldo);
 
 	$(".moneda").priceFormat({ prefix: '', centsLimit: 0});
-	$(".moneda").css("text-align","right");
+	$(".moneda").css("text-align","right");*/
 	// =======================================================================================================================================================
 
-    this.agregarProducto = function(datosP){ //FUNCION AGREGAR PRODUCTOS
-    	var sen=0;
+  this.set_ocupacion = function(ocupacion){
+    _ocupacion = ocupacion;
+    _productos = trae_productos_habitacion(_ocupacion); //vamos aqui (antes hay que traer toda la ocupacion)
+  	_valorTotalConsumos = 0, _pagado = 0, _saldo = 0;
+    $("#tablaProductosAgregados tbody>tr").remove();
+  	$.each(_productos, function(i, val){
+  		$("#tablaProductosAgregados").append("<tr><td><input type='hidden' id='tdetalle_id' val='"+val.detalle_id+"'>"+val.descripcion+"</td><td class='moneda'>"+val.valor+"</td><td id='tcantidad'>"+val.cantidad+"</td><td id='tValorVenta' class='moneda'>"+(val.cantidad*val.valor)+"</td><td></td></tr>");
+      _valorTotalConsumos += val.cantidad*val.valor;
+  	});
+  }
 
-		if(_productos.length>0){
+  this.agregar_producto = function(datosP){ //FUNCION AGREGAR PRODUCTOS
+      var sen=0;
 
-			$.each(_productos, function(i, val){
-				if(val.Nombre == datosP.Nombre){
-					_productos[i].Cantidad = _productos[i].Cantidad*1+datosP.Cantidad*1;
-					$("#tablaProductosAgregados tr").eq(i+1).find("#tcantidad").html(_productos[i].Cantidad);
-					$("#tablaProductosAgregados tr").eq(i+1).find("#tValorVenta").html(_productos[i].Cantidad*_productos[i].ValorVenta);
-					sen = 1;
+  		if(_productos.length>0){
 
-				}
-			});
+  			$.each(_productos, function(i, val){
+  				if(val.descripcion == datosP.nombre_producto){
+  					_productos[i].cantidad = _productos[i].cantidad*1+datosP.cantidad*1;
+  					$("#tablaProductosAgregados tr").eq(i+1).find("#tcantidad").html(_productos[i].cantidad);
+  					$("#tablaProductosAgregados tr").eq(i+1).find("#tValorVenta").html(_productos[i].cantidad*_productos[i].valor_venta);
+  					sen = 1;
 
-		}
-		if(sen == 0){
-			$("#tablaProductosAgregados").append("<tr><td><input type='hidden' id='tIdProducto' val='"+datosP.IdProducto+"'>"+datosP.NombreGrupo+"</td><td>"+datosP.Nombre+"</td><td class='moneda'>"+datosP.ValorVenta+"</td><td id='tcantidad'>"+datosP.Cantidad+"</td><td id='tValorVenta' class='moneda'>"+(datosP.Cantidad*datosP.ValorVenta)+"</td><td></td></tr>");
+  				}
+  			});
 
-			_productos.push(datosP);
+  		}
+  		if(sen == 0){
+  			$("#tablaProductosAgregados").append("<tr><td><input type='hidden' id='tIdProducto' val='"+datosP.producto_id+"'>"+datosP.nombre_producto+"</td><td class='moneda'>"+datosP.valor_venta+"</td><td id='tcantidad'>"+datosP.cantidad+"</td><td id='tValorVenta' class='moneda'>"+(datosP.cantidad*datosP.valor_venta)+"</td><td></td></tr>");
 
-		}
-		var IdOcupacion = this.ocupacion.IdOcupacion;
+  			_productos.push(datosP);
 
-		// INSERTAR A LA TABLA DE VENTAS
-		$.post("sql/controlHabitaciones-sql.php",
-			{ "Consumos":datosP, "IdOcupacion": IdOcupacion  } ,
-			function(data){
-		});
+  		}/*
+  		var IdOcupacion = this.ocupacion.IdOcupacion;
 
-		_valorTotalConsumos = 0;
-		$.each(_productos, function(i, val){
-			_valorTotalConsumos += val.Cantidad*val.ValorVenta;
-		});
+  		// INSERTAR A LA TABLA DE VENTAS
+  		$.post("sql/controlHabitaciones-sql.php",
+  			{ "Consumos":datosP, "IdOcupacion": IdOcupacion  } ,
+  			function(data){
+  		});
 
-		var _consumosTotal = this.ocupacion.ValorServicio*1 + this.ocupacion.ValorExtra*1 + _valorTotalConsumos*1;
-		_saldo = _consumosTotal-this.ocupacion.ValorPagado;
+  		_valorTotalConsumos = 0;
+  		$.each(_productos, function(i, val){
+  			_valorTotalConsumos += val.Cantidad*val.ValorVenta;
+  		});
 
-		$("#vlrConsumo1").html(_valorTotalConsumos);
-		$("#vlrConsumo2").html(_valorTotalConsumos);
-		$("#vlrTotal").html(_consumosTotal);
-		$("#vlrPagado").html(_pagado);
-		$("#vlrSaldo").html(_saldo);
+  		var _consumosTotal = this.ocupacion.ValorServicio*1 + this.ocupacion.ValorExtra*1 + _valorTotalConsumos*1;
+  		_saldo = _consumosTotal-this.ocupacion.ValorPagado;
 
-		$("#vlrConsumo"+numHab).val(_valorTotalConsumos); $("#vlrConsumo"+numHab).html(_valorTotalConsumos);
-		$("#total"+numHab).val(_consumosTotal); $("#total"+numHab).html(_consumosTotal);
-		$("#saldo"+numHab).val(_saldo); $("#saldo"+numHab).html(_saldo);
+  		$("#vlrConsumo1").html(_valorTotalConsumos);
+  		$("#vlrConsumo2").html(_valorTotalConsumos);
+  		$("#vlrTotal").html(_consumosTotal);
+  		$("#vlrPagado").html(_pagado);
+  		$("#vlrSaldo").html(_saldo);
 
-		$(".moneda").priceFormat({ prefix: '', centsLimit: 0});
-		$(".moneda").css("text-align","right");
+  		$("#vlrConsumo"+numHab).val(_valorTotalConsumos); $("#vlrConsumo"+numHab).html(_valorTotalConsumos);
+  		$("#total"+numHab).val(_consumosTotal); $("#total"+numHab).html(_consumosTotal);
+  		$("#saldo"+numHab).val(_saldo); $("#saldo"+numHab).html(_saldo);
+
+  		$(".moneda").priceFormat({ prefix: '', centsLimit: 0});
+  		$(".moneda").css("text-align","right");*/
     }
 
 }
-*/

@@ -56,4 +56,25 @@ if(isset($_GET['producto_id']) || isset($_GET['producto_cb'])){
 		echo json_encode($datos);
 	}
 
+	if(isset($_POST['detalle_ocupacion'])){
+
+			$detalle = $_POST['detalle_ocupacion'];
+			$ocupacion = $_POST['ocupacion'];
+			$conexion = mysqli_connect($servername,$username,$password, $dbname);
+
+			$consulta = "CALL p_s_detalle_ocupacion($ocupacion,'$detalle')";
+
+			if (!$conexion) {
+				die("Connection failed: " . mysqli_connect_error());
+			}
+
+			$resultado = mysqli_query($conexion, $consulta);
+			$datos = array();
+
+			while($row = mysqli_fetch_assoc($resultado))
+				$datos[] = $row;
+
+			echo json_encode($datos);
+		}
+
 ?>

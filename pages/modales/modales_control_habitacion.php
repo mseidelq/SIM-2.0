@@ -92,7 +92,7 @@
 									<table id="tablaProductosAgregados" class="table-hover display table" style="width:100%" border>
 										<thead class="bg-primary">
 										<tr>
-											<th >Grupo</th>
+
 											<th >Producto</th>
 											<th >Valor</th>
 											<th >Cant</th>
@@ -105,7 +105,7 @@
 										</tbody>
 
 										<tfoot class="bg-success">
-											<th colspan="4">
+											<th colspan="3">
 												Total consumos
 											</th>
 											<th><div id="vlrConsumo1" class="moneda"></div></th>

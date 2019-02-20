@@ -141,7 +141,7 @@ include("modales/modales_control_habitacion.php");
 	var usuario_jquery = <?php echo json_encode($sesion); ?>;
 	var turno_usuario =  verficiar_Turnos();
 	var turno_id;
-	var obj_admin_habitacion;
+	var obj_admin_habitacion = new Admin_habitacion();
 
 	var detectar="", sen=0;
 	cargar_habitaciones();

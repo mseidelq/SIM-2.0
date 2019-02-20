@@ -2,6 +2,8 @@ var lista_productos;
 var producto_a_vender;
 
 $(document).ready(function(){
+
+  // TRAER LISTA DE PRODUCTOS
   $.ajax({
     type: 'POST',
     url: "sql/manejo_productos.php",
@@ -75,19 +77,28 @@ $(document).ready(function(){
 		if(e.keyCode == 13){
 			// INGRESARLO EN LA TABLA
 			//objHabitacion.agregarProducto(datosProd[0]);
-      alert("Producto agregado");
+      obj_admin_habitacion.agregar_producto(producto_a_vender);
 
 			$("#productos").click();
 		}
 	});
-
-  /*$(".moneda").change(function(){
-    $(this).priceFormat({ prefix: '', centsLimit: 0});
-  });*/
-
 });
 
 $("#productos").click(function(){
   $("#productos").val(""); $("#cantidad_producto").val("");
   $("#valor_producto").html(""); $("#valor_total_producto").html("");
 });
+
+function trae_productos_habitacion(ocupacion){
+  var prod_ocupacion;
+  $.ajax({
+    type: 'POST',
+    url: "sql/manejo_productos.php",
+    data: { "ocupacion": ocupacion, "detalle_ocupacion":"PRODUCTOS"},
+    success: function(data){
+        prod_ocupacion = JSON.parse(data);
+    },
+    async:false
+  });
+  return(prod_ocupacion);
+}
