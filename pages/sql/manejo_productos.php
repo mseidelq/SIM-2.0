@@ -77,4 +77,33 @@ if(isset($_GET['producto_id']) || isset($_GET['producto_cb'])){
 			echo json_encode($datos);
 		}
 
+		// INSERTA LOS CONSUMOS
+		if(isset($_POST['consumo'])){
+
+				$consumo = $_POST['consumo'];
+				$ocupacion = $_POST['ocupacion_id'];
+				$turno = $_POST['turno'];
+				$producto = $consumo['producto_id'];
+				$nom_prod = $consumo['nombre_producto'];
+				$marca = $consumo['marca'];
+				$cant = $consumo['cantidad'];
+				$vlr = $consumo['valor_venta'];
+				$vlr_iva = $consumo['valor_iva'];
+				$conexion = mysqli_connect($servername,$username,$password, $dbname);
+
+				$consulta = "CALL p_i_consumo($producto, '$nom_prod [$marca]',$cant,$vlr,$vlr_iva,$ocupacion,$turno)";
+
+				if (!$conexion) {
+					die("Connection failed: " . mysqli_connect_error());
+				}
+
+				$resultado = mysqli_query($conexion, $consulta);
+				//$datos = array();
+
+				while($row = mysqli_fetch_assoc($resultado))
+					$datos = $row;
+
+				echo json_encode($datos);
+			}
+
 ?>

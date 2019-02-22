@@ -87,6 +87,8 @@ $(document).ready(function(){
 $("#productos").click(function(){
   $("#productos").val(""); $("#cantidad_producto").val("");
   $("#valor_producto").html(""); $("#valor_total_producto").html("");
+  $("#productos").autocomplete("disable");
+  $("#productos").focus();
 });
 
 function trae_productos_habitacion(ocupacion){

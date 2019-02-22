@@ -294,7 +294,7 @@ $(document).keypress(function(event){
 function Admin_habitacion() {
 
     // CONSTRUCTOR QUE TRAE LA OCUPACION Y LOS PRODUCTOS DE LA HABITACION ==============================================================================
-  //this.numHab = numHab;
+
 	var _ocupacion;
 
   var _productos;
@@ -329,10 +329,10 @@ function Admin_habitacion() {
   		if(_productos.length>0){
 
   			$.each(_productos, function(i, val){
-  				if(val.descripcion == datosP.nombre_producto){
-  					_productos[i].cantidad = _productos[i].cantidad*1+datosP.cantidad*1;
+  				if(val.producto_id == datosP.producto_id){
+            _productos[i].cantidad = _productos[i].cantidad*1+datosP.cantidad*1;
   					$("#tablaProductosAgregados tr").eq(i+1).find("#tcantidad").html(_productos[i].cantidad);
-  					$("#tablaProductosAgregados tr").eq(i+1).find("#tValorVenta").html(_productos[i].cantidad*_productos[i].valor_venta);
+  					$("#tablaProductosAgregados tr").eq(i+1).find("#tValorVenta").html(_productos[i].cantidad*_productos[i].valor);
   					sen = 1;
 
   				}
@@ -344,15 +344,12 @@ function Admin_habitacion() {
 
   			_productos.push(datosP);
 
-  		}/*
-  		var IdOcupacion = this.ocupacion.IdOcupacion;
-
+  		}
   		// INSERTAR A LA TABLA DE VENTAS
-  		$.post("sql/controlHabitaciones-sql.php",
-  			{ "Consumos":datosP, "IdOcupacion": IdOcupacion  } ,
-  			function(data){
+  		$.post("sql/manejo_productos.php",{ "consumo":datosP, "ocupacion_id": _ocupacion, "turno":turno_id  } , function(data){
+        alert(data);
   		});
-
+      /*
   		_valorTotalConsumos = 0;
   		$.each(_productos, function(i, val){
   			_valorTotalConsumos += val.Cantidad*val.ValorVenta;
