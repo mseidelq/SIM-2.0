@@ -115,48 +115,40 @@
 
 						  		</div>
 							</div>
+							<div class="col-lg-12">
+								<div class="table-responsive">
+
+									<table id="tablaResumenHabitacion" class="table-hover display table" style="width:100%" border>
+										<thead class="bg-warning">
+										<tr>
+											<th >Vlr Servicio</th>
+											<th >Vlr Extra</th>
+											<th >Vlr Consumos</th>
+											<th >Vlr Total</th>
+											<th >Pagado</th>
+											<th >Saldo</th>
+										</tr>
+										</thead>
+										<tr>
+											<td><div id="vlrServicio" class="moneda">0</div></td>
+											<td><div id="vlrExtra" class="moneda">0</div></td>
+											<td><div id="vlrConsumo2" class="moneda"></div></td>
+											<td><div id="vlrTotal" class="moneda">0</div></td>
+											<td><div id="vlrPagado" class="moneda">0</div></td>
+											<td><div id="vlrSaldo" class="moneda">0</div></td>
+										</tr>
+										<tbody>
+										</tbody>
+
+									</table>
+
+									</div>
+							</div>
 
 					  </div>
-					  <div class="panel-footer" >
 
-					  </div>
 					</div>
-				</div>
-
-				<div class="panel panel-info">
-					<div class="panel-heading">TOTALES</div>
-					<div class="panel-body" >
-						<div class="col-lg-12">
-							<div class="table-responsive">
-
-								<table id="tablaResumenHabitacion" class="table-hover display table" style="width:100%" border>
-									<thead class="bg-warning">
-									<tr>
-										<th >Vlr Servicio</th>
-										<th >Vlr Extra</th>
-										<th >Vlr Consumos</th>
-										<th >Vlr Total</th>
-										<th >Pagado</th>
-										<th >Saldo</th>
-									</tr>
-									</thead>
-									<tr>
-										<td><div id="vlrServicio" class="moneda">0</div></td>
-										<td><div id="vlrExtra" class="moneda">0</div></td>
-										<td><div id="vlrConsumo2" class="moneda"></div></td>
-										<td><div id="vlrTotal" class="moneda">0</div></td>
-										<td><div id="vlrPagado" class="moneda">0</div></td>
-										<td><div id="vlrSaldo" class="moneda">0</div></td>
-									</tr>
-									<tbody>
-									</tbody>
-
-								</table>
-
-								</div>
-						</div>
-					</div>
-				</div>
+				</div>				
 
 				<hr>
 				<div class="form-group">

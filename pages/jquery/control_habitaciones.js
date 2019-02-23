@@ -295,71 +295,64 @@ function Admin_habitacion() {
 
     // CONSTRUCTOR QUE TRAE LA OCUPACION Y LOS PRODUCTOS DE LA HABITACION ==============================================================================
 
-	var _ocupacion;
+	var _ocupacion, _productos, _servicios;
+	var _valorTotalConsumos = 0, _pagado = 0, _saldo = 0, _valor_extras=0, _valor_servicios=0;
 
-  var _productos;
-	var _valorTotalConsumos = 0, _pagado = 0, _saldo = 0;
-
-	/*$("#vlrConsumo1").html(_valorTotalConsumos);
-	$("#vlrServicio").html(this.ocupacion.ValorServicio);
-	$("#vlrExtra").html(this.ocupacion.ValorExtra);
-	$("#vlrConsumo2").html(_valorTotalConsumos);
-	$("#vlrTotal").html(this.ocupacion.ValorTotal);
-	$("#vlrPagado").html(_pagado);
-	$("#vlrSaldo").html(_saldo).val(_saldo);
-
-	$(".moneda").priceFormat({ prefix: '', centsLimit: 0});
-	$(".moneda").css("text-align","right");*/
-	// =======================================================================================================================================================
-
-  this.set_ocupacion = function(ocupacion){
+	  this.set_ocupacion = function(ocupacion){
     _ocupacion = ocupacion;
-    _productos = trae_productos_habitacion(_ocupacion); //vamos aqui (antes hay que traer toda la ocupacion)
-  	_valorTotalConsumos = 0, _pagado = 0, _saldo = 0;
+    mostrar_tabla();
+  }
+
+  function mostrar_tabla(){
+    _productos = trae_productos_habitacion(_ocupacion);
+    _servicios = trae_servicios_habitacion(_ocupacion);
+  	_valorTotalConsumos = 0, _pagado = 0, _saldo = 0; _valor_extras=0; _valor_servicios=0;
     $("#tablaProductosAgregados tbody>tr").remove();
   	$.each(_productos, function(i, val){
-  		$("#tablaProductosAgregados").append("<tr><td><input type='hidden' id='tdetalle_id' val='"+val.detalle_id+"'>"+val.descripcion+"</td><td class='moneda'>"+val.valor+"</td><td id='tcantidad'>"+val.cantidad+"</td><td id='tValorVenta' class='moneda'>"+(val.cantidad*val.valor)+"</td><td></td></tr>");
-      _valorTotalConsumos += val.cantidad*val.valor;
+  		$("#tablaProductosAgregados").append("<tr><td><input type='hidden' id='tdetalle_id' val='"+val.producto_id+"'>"+val.descripcion+"</td><td class='moneda'>"+val.valor/val.cantidad+"</td><td id='tcantidad'>"+val.cantidad+"</td><td id='tValorVenta' class='moneda'>"+val.valor+"</td><td></td></tr>");
+      _valorTotalConsumos += val.valor*1;
   	});
+    $.each(_servicios, function(i, val){
+  		$("#tablaProductosAgregados").append("<tr><td><input type='hidden' id='tdetalle_id' val='"+val.servicio_id+"'>"+val.descripcion+"</td><td class='moneda'>"+val.valor/val.cantidad+"</td><td id='tcantidad'>"+val.cantidad+"</td><td id='tValorVenta' class='moneda'>"+val.valor+"</td><td></td></tr>");
+      _valorTotalConsumos += val.valor*1;
+      if(val.descripcion=="HORAS EXTRAS") _valor_extras = val.valor*1
+      else _valor_servicios = val.valor*1;
+  	});
+    $("#vlrConsumo1").html(_valorTotalConsumos);
+    $("#vlrTotal").html(_valorTotalConsumos);
+    _valorTotalConsumos -= (_valor_extras+_valor_servicios)*1;
+    $("#vlrServicio").html(_valor_servicios);
+    $("#vlrExtra").html(_valor_extras);
+
+
+    $("#vlrConsumo2").html(_valorTotalConsumos);
   }
 
   this.agregar_producto = function(datosP){ //FUNCION AGREGAR PRODUCTOS
       var sen=0;
+      var _valores;
 
-  		if(_productos.length>0){
 
-  			$.each(_productos, function(i, val){
-  				if(val.producto_id == datosP.producto_id){
-            _productos[i].cantidad = _productos[i].cantidad*1+datosP.cantidad*1;
-  					$("#tablaProductosAgregados tr").eq(i+1).find("#tcantidad").html(_productos[i].cantidad);
-  					$("#tablaProductosAgregados tr").eq(i+1).find("#tValorVenta").html(_productos[i].cantidad*_productos[i].valor);
-  					sen = 1;
+      $.ajax({
+        type: 'POST',
+        url: "sql/manejo_productos.php",
+        data: {"consumo":datosP, "ocupacion_id": _ocupacion, "turno":turno_id},
+        success: function(data){
+            _valores = JSON.parse(data);
+            mostrar_tabla();
+            //placas_ = data;
+            },
 
-  				}
-  			});
+        async:false
+      });
 
-  		}
-  		if(sen == 0){
-  			$("#tablaProductosAgregados").append("<tr><td><input type='hidden' id='tIdProducto' val='"+datosP.producto_id+"'>"+datosP.nombre_producto+"</td><td class='moneda'>"+datosP.valor_venta+"</td><td id='tcantidad'>"+datosP.cantidad+"</td><td id='tValorVenta' class='moneda'>"+(datosP.cantidad*datosP.valor_venta)+"</td><td></td></tr>");
 
-  			_productos.push(datosP);
-
-  		}
-  		// INSERTAR A LA TABLA DE VENTAS
-  		$.post("sql/manejo_productos.php",{ "consumo":datosP, "ocupacion_id": _ocupacion, "turno":turno_id  } , function(data){
-        alert(data);
-  		});
       /*
-  		_valorTotalConsumos = 0;
-  		$.each(_productos, function(i, val){
-  			_valorTotalConsumos += val.Cantidad*val.ValorVenta;
-  		});
-
   		var _consumosTotal = this.ocupacion.ValorServicio*1 + this.ocupacion.ValorExtra*1 + _valorTotalConsumos*1;
   		_saldo = _consumosTotal-this.ocupacion.ValorPagado;
 
-  		$("#vlrConsumo1").html(_valorTotalConsumos);
-  		$("#vlrConsumo2").html(_valorTotalConsumos);
+  		$("#vlrConsumo1").html(_valores.valor);
+  		$("#vlrConsumo2").html(_valores.valor);
   		$("#vlrTotal").html(_consumosTotal);
   		$("#vlrPagado").html(_pagado);
   		$("#vlrSaldo").html(_saldo);
@@ -372,4 +365,18 @@ function Admin_habitacion() {
   		$(".moneda").css("text-align","right");*/
     }
 
+}
+
+function trae_servicios_habitacion(ocupacion){
+  var servicio_ocupacion;
+  $.ajax({
+    type: 'POST',
+    url: "sql/manejo_productos.php",
+    data: { "ocupacion": ocupacion, "detalle_ocupacion":"SERVICIOS"},
+    success: function(data){
+        servicio_ocupacion = JSON.parse(data);
+    },
+    async:false
+  });
+  return(servicio_ocupacion);
 }

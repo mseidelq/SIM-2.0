@@ -56,6 +56,7 @@ if(isset($_GET['producto_id']) || isset($_GET['producto_cb'])){
 		echo json_encode($datos);
 	}
 
+	// TRAER PRODUCTOS DE LA OCUPACION
 	if(isset($_POST['detalle_ocupacion'])){
 
 			$detalle = $_POST['detalle_ocupacion'];
