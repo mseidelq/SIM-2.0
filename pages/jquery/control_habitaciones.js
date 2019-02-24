@@ -320,12 +320,13 @@ function Admin_habitacion() {
   	});
     $("#vlrConsumo1").html(_valorTotalConsumos);
     $("#vlrTotal").html(_valorTotalConsumos);
+    $("#vlrSaldo").html(_valorTotalConsumos);
     _valorTotalConsumos -= (_valor_extras+_valor_servicios)*1;
     $("#vlrServicio").html(_valor_servicios);
     $("#vlrExtra").html(_valor_extras);
-
-
     $("#vlrConsumo2").html(_valorTotalConsumos);
+    $(".moneda").priceFormat({ prefix: '', centsLimit: 0});
+    $(".moneda").css("text-align","right");
   }
 
   this.agregar_producto = function(datosP){ //FUNCION AGREGAR PRODUCTOS

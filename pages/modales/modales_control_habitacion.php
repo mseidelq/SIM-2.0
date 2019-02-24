@@ -50,7 +50,7 @@
 
 	<!-- MODAL DE AGREGAR ARTICULOS O FINALIZAR SERVICIO HABITACION -->
 
-	<div class="modal fade bd-example-modal-lg" id="modal_administrar_habitacion" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+	<div class="modal fade bd-example-modal-lg" id="modal_administrar_habitacion" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" data-keyboard=false data-backdrop=static >
 	<div class="modal-dialog modal-lg"  role="document">
 
 	  <!-- Modal content-->
@@ -148,7 +148,7 @@
 					  </div>
 
 					</div>
-				</div>				
+				</div>
 
 				<hr>
 				<div class="form-group">
