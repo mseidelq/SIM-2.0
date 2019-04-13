@@ -7,6 +7,7 @@ var conteo_intervalo;
 var senal_sonido = 0;
 var placas;
 var placa=0;
+var observacion2;
 //CARGAR LAS Habitaciones
 $(document).ready(function(){
   //$(".btnHabitacion").hide();
@@ -18,11 +19,25 @@ $(document).ready(function(){
   		var tipo      = lista_habitaciones[cod_hab]["tipo_hab_id"];
   		// SI YA ESTA OCUPADA LA HABITACION
       if($('#btn'+no_hab).attr("data-target") == "#modal_administrar_habitacion"){
-        var ocupacion_id = $("#ocupacion"+no_hab).val();
+        ocupacion_id = $("#ocupacion"+no_hab).val();
+        placa = $("#placa"+no_hab).html();
+        observacion2 = $("#observaciones"+no_hab).html();
 
         obj_admin_habitacion.set_ocupacion(ocupacion_id);
         //obj_admin_habitacion.set_ocupacion(ocupacion_id);
   			$("#tituloModalAdmin").text("Administrar habitación "+no_hab);
+        $('#placa2').val(placa);
+        $('#observaciones2').val(observacion2);
+        placas = traer_placas();
+        placa=0;
+
+        $("#placa2").autocomplete({
+          source: placas,
+        	select: function (event, item) {
+						placa = item.item.id;
+            //alert(placa);
+  				}
+        });
   		}
   		//SI NO ESTA OCUPADA LA HABITACION
       else{
@@ -72,7 +87,7 @@ $(document).ready(function(){
 
   				if(precios.length>0){
   					$.each(precios, function(i, val){
-  						$("#select_servicio").append("<option value="+i+">"+val.descripcion+", Valor = $ "+val.valor_servicio+" </option>");
+  						$("#select_servicio").append("<option value="+i+">"+val.descripcion+", Valor = $ "+val.valor_servicio+"</option>");
   					});
   				}
   				else{
@@ -296,38 +311,77 @@ function Admin_habitacion() {
     // CONSTRUCTOR QUE TRAE LA OCUPACION Y LOS PRODUCTOS DE LA HABITACION ==============================================================================
 
 	var _ocupacion, _productos, _servicios;
-	var _valorTotalConsumos = 0, _pagado = 0, _saldo = 0, _valor_extras=0, _valor_servicios=0;
+	var _valorTotalConsumos = 0, _pagado = 0, _saldo = 0, _valor_extras=0, _valor_servicios=0, _valor_productos = 0;
+  var _valor_pagado = 0;
+  this.pagos;
+  this.muestra_tabla = mostrar_tabla_productos;
+  this.traer_pagos = trae_pagos;
 
-	  this.set_ocupacion = function(ocupacion){
+	this.set_ocupacion = function(ocupacion){
     _ocupacion = ocupacion;
-    mostrar_tabla();
+    mostrar_tabla_productos();
   }
 
-  function mostrar_tabla(){
+  function trae_pagos(){
+    var _pagos;
+    $.ajax({
+      type: 'POST',
+      url: "sql/pagos.php",
+      data: { "traer_pagos": _ocupacion},
+      success: function(data){
+          _pagos = JSON.parse(data);
+      },
+      async:false
+    });
+    this.pagos = _pagos;
+    return(_pagos);
+  }
+
+  function mostrar_tabla_productos(){
+    $(".panel_productos").show();
+    $("#panel_pagos").hide();
+    $("#realizar_pago").show();
+
     _productos = trae_productos_habitacion(_ocupacion);
     _servicios = trae_servicios_habitacion(_ocupacion);
-  	_valorTotalConsumos = 0, _pagado = 0, _saldo = 0; _valor_extras=0; _valor_servicios=0;
+
+  	_valorTotalConsumos = 0; _pagado = 0; _saldo = 0; _valor_extras=0; _valor_servicios=0;
+    _valor_productos = 0; _valor_extras=0; _valor_servicios = 0;
+
     $("#tablaProductosAgregados tbody>tr").remove();
   	$.each(_productos, function(i, val){
   		$("#tablaProductosAgregados").append("<tr><td><input type='hidden' id='tdetalle_id' val='"+val.producto_id+"'>"+val.descripcion+"</td><td class='moneda'>"+val.valor/val.cantidad+"</td><td id='tcantidad'>"+val.cantidad+"</td><td id='tValorVenta' class='moneda'>"+val.valor+"</td><td></td></tr>");
-      _valorTotalConsumos += val.valor*1;
+      _valor_productos += val.valor*1;
   	});
+
     $.each(_servicios, function(i, val){
   		$("#tablaProductosAgregados").append("<tr><td><input type='hidden' id='tdetalle_id' val='"+val.servicio_id+"'>"+val.descripcion+"</td><td class='moneda'>"+val.valor/val.cantidad+"</td><td id='tcantidad'>"+val.cantidad+"</td><td id='tValorVenta' class='moneda'>"+val.valor+"</td><td></td></tr>");
-      _valorTotalConsumos += val.valor*1;
       if(val.descripcion=="HORAS EXTRAS") _valor_extras = val.valor*1
       else _valor_servicios = val.valor*1;
   	});
-    $("#vlrConsumo1").html(_valorTotalConsumos);
-    $("#vlrTotal").html(_valorTotalConsumos);
-    $("#vlrSaldo").html(_valorTotalConsumos);
-    _valorTotalConsumos -= (_valor_extras+_valor_servicios)*1;
+    _valorTotalConsumos = _valor_extras + _valor_servicios + _valor_productos;
+    $("#vlrConsumos").html(_valorTotalConsumos);
+
+    mostrar_tabla_pagos();
+    _saldo = _valorTotalConsumos - _valor_pagado;
     $("#vlrServicio").html(_valor_servicios);
     $("#vlrExtra").html(_valor_extras);
-    $("#vlrConsumo2").html(_valorTotalConsumos);
+    $("#vlrProductos").html(_valorTotalConsumos);
+    $("#vlrPadicional").html("0")
+    $("#vlrTotal").html(_valorTotalConsumos);
+    $("#vlrPagado").html(_valor_pagado);
+    $("#vlrSaldo").html(_saldo);
+    $("#valor_a_pagar").html(_saldo);
+    $("#faltante_x_pagar").html(_saldo);
+    $("#valor_pagando").val("0");
+    //_valorTotalConsumos -= (_valor_extras+_valor_servicios)*1;
+
+
     $(".moneda").priceFormat({ prefix: '', centsLimit: 0});
     $(".moneda").css("text-align","right");
   }
+
+
 
   this.agregar_producto = function(datosP){ //FUNCION AGREGAR PRODUCTOS
       var sen=0;
@@ -347,25 +401,22 @@ function Admin_habitacion() {
         async:false
       });
 
-
-      /*
-  		var _consumosTotal = this.ocupacion.ValorServicio*1 + this.ocupacion.ValorExtra*1 + _valorTotalConsumos*1;
-  		_saldo = _consumosTotal-this.ocupacion.ValorPagado;
-
-  		$("#vlrConsumo1").html(_valores.valor);
-  		$("#vlrConsumo2").html(_valores.valor);
-  		$("#vlrTotal").html(_consumosTotal);
-  		$("#vlrPagado").html(_pagado);
-  		$("#vlrSaldo").html(_saldo);
-
-  		$("#vlrConsumo"+numHab).val(_valorTotalConsumos); $("#vlrConsumo"+numHab).html(_valorTotalConsumos);
-  		$("#total"+numHab).val(_consumosTotal); $("#total"+numHab).html(_consumosTotal);
-  		$("#saldo"+numHab).val(_saldo); $("#saldo"+numHab).html(_saldo);
-
-  		$(".moneda").priceFormat({ prefix: '', centsLimit: 0});
-  		$(".moneda").css("text-align","right");*/
     }
 
+    function mostrar_tabla_pagos(){
+      pagos = trae_pagos();
+      $("#tabla_pagos_realizados tbody>tr").empty();
+      _valor_pagado = parseInt(0*1);
+      $.each(pagos, function(i, val){
+        //alert("<tr><td>"+val.valor_pago+"</td><td>"+val.fecha_pago+"</td><td>"+val.medio+"</td></tr>");
+          $("#tabla_pagos_realizados").append("<tr><td class='moneda'>"+val.valor_pago+"</td><td>"+val.fecha_pago+"</td><td>"+val.medio+"</td></tr>");
+          //tempDouble = parseInt(val.valor_pago*1);
+          _valor_pagado += val.valor_pago*1;
+      });
+      $("#total_pagado").html(_valor_pagado);
+      $(".moneda").priceFormat({ prefix: '', centsLimit: 0});
+      return(_valor_pagado);
+    }
 }
 
 function trae_servicios_habitacion(ocupacion){
@@ -381,3 +432,32 @@ function trae_servicios_habitacion(ocupacion){
   });
   return(servicio_ocupacion);
 }
+
+$("#realizar_pago").click(function () {
+  //$("#modal_realizar_pago").modal();
+  $(".panel_productos").hide();
+  $("#panel_pagos").show();
+  $("#select_medio").empty();
+  $(this).hide();
+  $.ajax({
+    type: 'POST',
+    url: "sql/pagos.php",
+    data: { "medios_pago": "traer"},
+    success: function(data){
+        var medios = JSON.parse(data);
+        $.each(medios, function(i, val) {
+          $('#select_medio').append($('<option>', {
+            value: val.medio_id,
+            text: val.medio
+          }));
+
+        })
+    },
+    async:false
+  });
+
+});
+
+$("#vlrSaldo").click(function () {
+  $("#realizar_pago").click();
+});

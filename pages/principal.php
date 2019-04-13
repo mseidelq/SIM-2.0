@@ -135,12 +135,14 @@ include("modales/modales_control_habitacion.php");
 <script src="jquery/manejo_turnos.js"></script>
 <script src="jquery/control_habitaciones.js"></script>
 <script src="jquery/manejo_productos.js"></script>
+<script src="jquery/pagos.js"></script>
 
 <script type="text/javascript">
 	// TRAE TODOS LOS DATOS DEL USUARIO Y LOS PONE EN LA VARIABLE usuario_jquery
 	var usuario_jquery = <?php echo json_encode($sesion); ?>;
 	var turno_usuario =  verficiar_Turnos();
 	var turno_id;
+	var ocupacion_id, pagos_realizados;
 	var obj_admin_habitacion = new Admin_habitacion();
 	//$('#modal_administrar_habitacion').modal({ backdrop: 'static', keyboard: false});
 
